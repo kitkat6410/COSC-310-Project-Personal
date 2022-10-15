@@ -10,11 +10,23 @@ color col_big_office;
 color col_bathroom_1;
 color col_bathroom_2;
 color col_conference;
+boolean maindoor;
+boolean kitchendoor;
+boolean officedoor1;
+boolean officedoor2;
+boolean bigofficedoor;
+boolean bathroomdoor1;
+boolean bathroomdoor2;
+boolean confdoor;
+double a;
+double b;
+
 
 
 void setup(){
   size(484, 390);
   bg = loadImage("office_layout_final.png");
+  //frameRate(300);
   g = color(#008631);
   r = color(#FF0000);
   col_main = r;
@@ -25,13 +37,33 @@ void setup(){
   col_bathroom_1 = r;
   col_bathroom_2 = r;
   col_conference = r;
+  maindoor = false;
+  kitchendoor = false;
+  officedoor1 = false;
+  officedoor2 = false;
+  bigofficedoor = false;
+  bathroomdoor1 = false;
+  bathroomdoor2 = false;
+  confdoor = false;
+  print("hi");
 
     
   
 }
 
 
-void draw(){
+void draw(){ 
+  if(a-b >= 3000){
+    maindoor = false;
+      kitchendoor = false;
+  officedoor1 = false;
+  officedoor2 = false;
+  bigofficedoor = false;
+  bathroomdoor1 = false;
+  bathroomdoor2 = false;
+  confdoor = false;
+  }
+  a = millis();
   background(bg);
   strokeWeight(2);
   stroke(col_main);
@@ -50,18 +82,22 @@ void draw(){
   line(396, 130, 396, 170); // bathroom 2 line
   stroke(col_conference);
   line(279, 114, 355, 114); // conference room line
-  if(maindoor()){
-    col_main = g;
+  if(maindoor){
+   col_main = g;
   }
-  
-
-}
-
-public boolean maindoor(){
-  if(mouseX>=61 && mouseX<=140 && mouseY == 58){
-    return true;
-}
   else{
-    return false;
+    col_main = r;
   }
+  if(kitchendoor){
+    col_kitchen = g;
+  }
+  else{
+    col_kitchen = r;
+  }
+
+  
 }
+
+
+
+  
