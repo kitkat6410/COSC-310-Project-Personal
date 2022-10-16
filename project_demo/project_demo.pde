@@ -55,13 +55,21 @@ void setup(){
 void draw(){ 
   if(a-b >= 2000){
     maindoor = false;
-      kitchendoor = false;
-  officedoor1 = false;
-  officedoor2 = false;
-  bigofficedoor = false;
-  bathroomdoor1 = false;
-  bathroomdoor2 = false;
-  confdoor = false;
+    kitchendoor = false;
+    officedoor1 = false;
+    officedoor2 = false;
+    bigofficedoor = false;
+    bathroomdoor1 = false;
+    bathroomdoor2 = false;
+    confdoor = false;
+    col_main = r;
+    col_kitchen = r;
+    col_office_1 = r;
+    col_office_2 = r;
+    col_big_office = r;
+    col_bathroom_1 = r;
+    col_bathroom_2 = r;
+    col_conference = r;
   }
   a = millis();
   background(bg);
@@ -85,50 +93,32 @@ void draw(){
   if(maindoor){
    col_main = g;
   }
-  else{
-    col_main = r;
-  }
-  if(kitchendoor){
+  else if(kitchendoor){
     col_kitchen = g;
   }
-  else{
-    col_kitchen = r;
-  }
-  if(officedoor1){
+  
+  else if(officedoor1){
     col_office_1 = g;
   }
-  else{
-    col_office_1 = r;
-  }
-  if(officedoor2){
+
+  else if(officedoor2){
     col_office_2 = g;
   }
-  else{
-    col_office_2 = r;
-  }
-  if(bigofficedoor){
+ 
+  else if(bigofficedoor){
     col_big_office = g;
   }
-  else{
-    col_big_office = r;
-  }
-  if(bathroomdoor1){
+ 
+  else if(bathroomdoor1){
     col_bathroom_1 = g;
   }
-  else{
-    col_bathroom_1 = r;
-  }
-  if(bathroomdoor2){
+ 
+  else if(bathroomdoor2){
     col_bathroom_2 = g;
   }
-  else{
-    col_bathroom_2 = r;
-  }
-  if(confdoor){
+ 
+  else if(confdoor){
     col_conference = g;
-  }
-  else{
-    col_conference = r;
   }
 
   
