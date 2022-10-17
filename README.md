@@ -2,7 +2,6 @@
 
 ## Developed by:
 - Anisha Parikh
-- Graham Bovett
 - Jaden Edgar
 - Kyra Barnes
 
