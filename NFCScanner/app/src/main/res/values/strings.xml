@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">COSC 310 Project NFC Scanner</string>
+    <string-array name="securitylevels">
+        <item>LEVEL 1</item>
+        <item>LEVEL 2</item>
+        <item>LEVEL 3</item>
+        <item>LEVEL 4</item>
+        <item>LEVEL 5</item>
+    </string-array>
+</resources>
