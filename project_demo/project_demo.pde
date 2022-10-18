@@ -99,21 +99,21 @@ void draw(){
   background(bg);
   strokeWeight(6);
   stroke(col_main);
-  line(160, 168, 200, 168);    // main entrance line, done
+  line(150, 168, 336, 168);    // main entrance line, done
   stroke(col_kitchen);
-  //line(27,244,66,244);      // kitchen line, done
+  line(68,652,172,652);      // kitchen line, done
   stroke(col_office_1);
-  //line(121, 244, 157, 244); // office 1 line, done
+  line(316, 652, 416, 652); // office 1 line, done
   stroke(col_office_2);
- // line(233, 244, 273, 244); // office 2 line, done
+  line(617, 652, 722, 652); // office 2 line, done
   stroke(col_big_office);
- // line(348, 244, 387, 244); // big office line, done
+  line(924, 652, 1027, 652); // big office line, done
   stroke(col_bathroom_1);
- // line(396, 188, 396, 228); // bathroom 1 line, done
+  line(1050, 506, 1050, 608); // bathroom 1 line, done
   stroke(col_bathroom_2);
- // line(396, 130, 396, 170); // bathroom 2 line, done
+  line(1050, 348, 1050, 453); // bathroom 2 line, done
   stroke(col_conference);
- // line(279, 114, 355, 114); // conference room line
+  line(774, 305, 938, 305); // conference room line
   if(maindoor){
    col_main = g;
   }
