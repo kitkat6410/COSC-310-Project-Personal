@@ -31,10 +31,8 @@ double b8;
 
 
 void setup(){
-  //size(484, 390);
  size(1280, 1038);
   bg = loadImage("Office_Building_Layout_Final.png");
-  //frameRate(300);
   g = color(#008631);
   r = color(#FF0000);
   col_main = r;
@@ -99,19 +97,19 @@ void draw(){
   background(bg);
   strokeWeight(6);
   stroke(col_main);
-  line(150, 168, 336, 168);    // main entrance line, done
+  line(150, 168, 336, 168);    // main entrance line
   stroke(col_kitchen);
-  line(68,652,172,652);      // kitchen line, done
+  line(68,652,172,652);      // kitchen line
   stroke(col_office_1);
-  line(316, 652, 416, 652); // office 1 line, done
+  line(316, 652, 416, 652); // office 1 line
   stroke(col_office_2);
-  line(617, 652, 722, 652); // office 2 line, done
+  line(617, 652, 722, 652); // office 2 line
   stroke(col_big_office);
-  line(924, 652, 1027, 652); // big office line, done
+  line(924, 652, 1027, 652); // big office line
   stroke(col_bathroom_1);
-  line(1050, 506, 1050, 608); // bathroom 1 line, done
+  line(1050, 506, 1050, 608); // bathroom 1 line
   stroke(col_bathroom_2);
-  line(1050, 348, 1050, 453); // bathroom 2 line, done
+  line(1050, 348, 1050, 453); // bathroom 2 line
   stroke(col_conference);
   line(774, 305, 938, 305); // conference room line
   if(maindoor){
