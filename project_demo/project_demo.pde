@@ -1,5 +1,4 @@
 PImage bg;
-int y;
 color g;
 color r;
 color col_main;
@@ -30,7 +29,7 @@ double b8;
 
 
 
-void setup(){
+void setup(){ 
  size(1280, 1038);
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
@@ -58,8 +57,10 @@ void setup(){
 }
 
 
-void draw(){ 
-  if(a-b1 >= 3000){
+void draw(){  
+  // a is how many milliseconds it has been since the start of the program
+  a = millis();//a - b# = how much time has passed since a certain door has been clicked
+  if(a-b1 >= 3000){  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
     col_main = r;
    if(a-b2 >= 3000){
@@ -93,26 +94,28 @@ void draw(){
    }
 
   }
-  a = millis();
+ // a = millis();
   background(bg);
   strokeWeight(6);
   stroke(col_main);
   line(150, 168, 336, 168);    // main entrance line
   stroke(col_kitchen);
-  line(68,652,172,652);      // kitchen line
+  line(68,652,172,652);        // kitchen line
   stroke(col_office_1);
-  line(316, 652, 416, 652); // office 1 line
+  line(316, 652, 416, 652);    // office 1 line
   stroke(col_office_2);
-  line(617, 652, 722, 652); // office 2 line
+  line(617, 652, 722, 652);    // office 2 line
   stroke(col_big_office);
-  line(924, 652, 1027, 652); // big office line
+  line(924, 652, 1027, 652);   // big office line
   stroke(col_bathroom_1);
-  line(1050, 506, 1050, 608); // bathroom 1 line
+  line(1050, 506, 1050, 608);  // bathroom 1 line
   stroke(col_bathroom_2);
-  line(1050, 348, 1050, 453); // bathroom 2 line
+  line(1050, 348, 1050, 453);  // bathroom 2 line
   stroke(col_conference);
-  line(774, 305, 938, 305); // conference room line
-  if(maindoor){
+  line(774, 305, 938, 305);    // conference room line
+  
+  
+  if(maindoor){ //if the main door has been clicked, the color of the door will turn green
    col_main = g;
   }
   if(kitchendoor){

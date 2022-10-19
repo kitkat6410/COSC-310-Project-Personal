@@ -1,7 +1,7 @@
 void mouseClicked(){
   if(mouseX>=150 && mouseX <=336 && mouseY >=165 && mouseY <= 171){
     maindoor = true;
-    b1 = millis();  
+    b1 = millis();  // how many milliseconds it has been since the start of the program
   }else if(mouseX>=68 && mouseX <=172 && mouseY>=649 && mouseY <= 655){
     kitchendoor = true;
     b2 = millis();
