@@ -59,35 +59,35 @@ void setup(){
 
 
 void draw(){ 
-  if(a-b1 >= 2000){
+  if(a-b1 >= 3000){
     maindoor = false;
     col_main = r;
-   if(a-b2 >= 2000){
+   if(a-b2 >= 3000){
     kitchendoor = false;
     col_kitchen = r;
    }
-   if(a-b3 >= 2000){
+   if(a-b3 >= 3000){
     officedoor1 = false;
     col_office_1 = r;
     
    }
-   if(a-b4 >= 2000){
+   if(a-b4 >= 3000){
     officedoor2 = false;
     col_office_2 = r;
    }
-   if(a-b5 >= 2000){
+   if(a-b5 >= 3000){
     bigofficedoor = false;
     col_big_office = r;
    }
-   if(a-b6 >= 2000){
+   if(a-b6 >= 3000){
     bathroomdoor1 = false;
     col_bathroom_1 = r;
    }
-   if(a-b7 >= 2000){
+   if(a-b7 >= 3000){
     bathroomdoor2 = false;
     col_bathroom_2 = r;
    }
-   if(a-b8>= 2000){
+   if(a-b8>= 3000){
     confdoor = false;
     col_conference = r;
    }
@@ -146,7 +146,7 @@ void draw(){
   
 }
 
-//jira pls
+
 
 
 
