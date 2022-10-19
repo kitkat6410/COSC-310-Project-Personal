@@ -12,3 +12,7 @@ Our chosen project will be the analysis, design, implementation, and verificatio
 # How will this software system work?
 
 We will be using a combination of NFC cards, as well as client sided software system to emulate a office building implementing our security system.
+
+# How to compile and run the code
+
+The project_demo was made using Processing 4.0.1. It should also run with earlier versions. The program will be updated when new versions of Processing are released if necessary
