@@ -11,4 +11,4 @@ Our chosen project will be the analysis, design, implementation, and verificatio
 
 # How will this software system work?
 
-We will be using a combination of NFC cards, aswell as client sided software system to emulate a office building implementing our security system.
+We will be using a combination of NFC cards, as well as client sided software system to emulate a office building implementing our security system.
