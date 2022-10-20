@@ -6,8 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView textViewAccess = findViewById(R.id.textViewAccess);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.companyroles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -59,30 +61,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //TODO: Create button functionality for emulating a valid NFC card
-
                 testAccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
-                if (testAccessLevelString == "GUEST") {
+                if (testAccessLevelString.equals("GUEST")) {
                     testAccessLevelInteger = 0;
                 }
-                else if (testAccessLevelString == "EMPLOYEE") {
+                else if (testAccessLevelString.equals("EMPLOYEE")) {
                     testAccessLevelInteger = 1;
                 }
-                else if (testAccessLevelString == "CEO") {
+                else if (testAccessLevelString.equals("CEO")) {
                     testAccessLevelInteger = 2;
                 }
 
                 testNFCCardString = spinnerEmulateNFCCard.getSelectedItem().toString();
-                if (testNFCCardString == "GUEST") {
+                if (testNFCCardString.equals("GUEST")) {
                     testNFCCardInteger = 0;
                 }
-                else if (testNFCCardString == "EMPLOYEE") {
+                else if (testNFCCardString.equals("EMPLOYEE")) {
                     testNFCCardInteger = 1;
                 }
-                else if (testNFCCardString== "CEO") {
+                else if (testNFCCardString.equals("CEO")) {
                     testNFCCardInteger = 2;
                 }
 
+                if (testNFCCardInteger < testAccessLevelInteger) {
+                    accessDenied(textViewAccess);
+                }
+                else if (testNFCCardInteger >= testAccessLevelInteger) {
+                    accessGranted(textViewAccess);
+                }
             }
         });
 
@@ -146,5 +152,30 @@ public class MainActivity extends AppCompatActivity {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         }
+    }
+
+    private void accessGranted(TextView textViewAccess) {
+        //TODO: add additional function of having access text 'flashing' and return to "ACCESS PENDING" before function returns
+        textViewAccess.setText("ACCESS GRANTED");
+
+        for(int i = 0; i < 5; i++) {
+            textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
+            //Thread.sleep(1000);
+            //textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+        }
+       //textViewAccess.setText("ACCESS PENDING");
+    }
+
+    private void accessDenied(TextView textViewAccess) {
+        //TODO: add additional function of having access text 'flashing' and return to "ACCESS PENDING" before function returns
+        textViewAccess.setText("ACCESS DENIED");
+
+        for(int i = 0; i < 5; i++) {
+
+            textViewAccess.setTextColor(Color.parseColor("#FF0000"));
+            //Thread.sleep(1000);
+            //textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+        }
+        //textViewAccess.setText("ACCESS PENDING");
     }
 }
