@@ -19,24 +19,24 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.animation.ObjectAnimator;
-
 import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
 
+    //
     NfcAdapter nfcAdapter;
     PendingIntent pendingIntent;
     IntentFilter writingTagFilters[];
 
+    //
     Tag myTag;
     Context context;
     TextView nfc_contents;
     Button testButton;
 
+    //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String testAccessLevelString, testNFCCardString;
     int testAccessLevelInteger, testNFCCardInteger;
 
@@ -45,17 +45,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //textview "textViewAccess"
         TextView textViewAccess = findViewById(R.id.textViewAccess);
 
+        //ArrayAdapter to set spinners "SpinnerCompanyRolesAccess" and "spinnerEmulateNFCCard" to values from string.xml "companyroles"
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.companyroles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        //Spinner "spinnerCompanyRolesAccess"
         Spinner spinnerCompanyRoleAccess = findViewById(R.id.spinnerCompanyRoleAccess);
         spinnerCompanyRoleAccess.setAdapter(adapter);
 
+        //Spinner "spinnerEmulateNFCCard"
         Spinner spinnerEmulateNFCCard = findViewById(R.id.spinnerEmulateNFCCard);
         spinnerEmulateNFCCard.setAdapter(adapter);
 
+        //
         nfc_contents = (TextView) findViewById(R.id.nfc_contents);
         testButton =  findViewById(R.id.testButton);
         context = this;
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //spinner value chosen for "access level" stored to string and then integer variable
                 testAccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
                 if (testAccessLevelString.equals("GUEST")) {
                     testAccessLevelInteger = 0;
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     testAccessLevelInteger = 2;
                 }
 
+                //spinner value chosen for "emulated NFC card" stored to string and then integer variable
                 testNFCCardString = spinnerEmulateNFCCard.getSelectedItem().toString();
                 if (testNFCCardString.equals("GUEST")) {
                     testNFCCardInteger = 0;
@@ -86,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     testNFCCardInteger = 2;
                 }
 
+                //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
                 if (testNFCCardInteger < testAccessLevelInteger) {
                     accessDenied(textViewAccess);
                 }
@@ -103,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //TODO: Determine if better solution for automatically detecting NFC card is available other then idle intent
-
         readFromIntent(getIntent());
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
@@ -158,9 +165,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void accessGranted(TextView textViewAccess) {
-        //TODO: add additional function of having access text 'flashing' and return to "ACCESS PENDING" before function returns
+        //on successful access attempt, change "textViewAccess" to access granted and play animation
         textViewAccess.setText("ACCESS GRANTED");
 
+        //settings for animation
         Animation blink = new AlphaAnimation(0.f, 1.f);
         blink.setDuration(500);
         blink.setStartOffset(20);
@@ -168,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         blink.setRepeatCount(5);
         blink.setAnimationListener(new Animation.AnimationListener(){
 
+            //play animation and with settings described below
             @Override
             public void onAnimationStart(Animation animation){
                 textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
@@ -177,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation){
-                //viewToAnimate.setVisibility(View.GONE);
                 textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
                 textViewAccess.setText("ACCESS PENDING");
             }
@@ -186,9 +194,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void accessDenied(TextView textViewAccess) {
-        //TODO: add additional function of having access text 'flashing' and return to "ACCESS PENDING" before function returns
+        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
         textViewAccess.setText("ACCESS DENIED");
 
+        //settings for animation
         Animation blink = new AlphaAnimation(0.f, 1.f);
         blink.setDuration(500);
         blink.setStartOffset(20);
@@ -196,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         blink.setRepeatCount(5);
         blink.setAnimationListener(new Animation.AnimationListener(){
 
+            //play animation and with settings described below
             @Override
             public void onAnimationStart(Animation animation){
                 textViewAccess.setTextColor(Color.parseColor("#FF0000"));
@@ -205,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation){
-                //viewToAnimate.setVisibility(View.GONE);
                 textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
                 textViewAccess.setText("ACCESS PENDING");
             }
@@ -213,10 +222,3 @@ public class MainActivity extends AppCompatActivity {
         textViewAccess.startAnimation(blink);
     }
 }
-
-    //Animation blink = new AlphaAnimation(0.0f, 1.0f);
-     //   blink.setDuration(1000); //You can manage the blinking time with this parameter
-     //           blink.setStartOffset(20);
-      //          blink.setRepeatMode(Animation.REVERSE);
-      //          blink.setRepeatCount(3);
-      //         textViewAccess.startAnimation(blink);
