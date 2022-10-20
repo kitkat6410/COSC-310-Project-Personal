@@ -15,57 +15,95 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="148dp"
-            android:layout_marginTop="194dp"
+            android:layout_marginTop="242dp"
             android:layout_marginEnd="148dp"
-            android:layout_marginBottom="122dp"
             android:scaleX="3"
             android:scaleY="3"
             android:text="ACCESS PENDING"
-            app:layout_constraintBottom_toTopOf="@+id/nfc_contents"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/ActivateButton"
+            android:id="@+id/testButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="134dp"
+            android:layout_marginTop="29dp"
             android:layout_marginEnd="134dp"
-            android:layout_marginBottom="100dp"
-            android:text="unused"
+            android:layout_marginBottom="36dp"
+            android:text="TEST"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerSecurityLevels" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerEmulateNFCCard" />
 
         <TextView
             android:id="@+id/nfc_contents"
             android:layout_width="300dp"
             android:layout_height="25dp"
             android:layout_marginStart="55dp"
-            android:layout_marginTop="122dp"
+            android:layout_marginTop="166dp"
             android:layout_marginEnd="56dp"
-            android:layout_marginBottom="49dp"
             android:text="Current NFC Content:"
-            app:layout_constraintBottom_toTopOf="@+id/spinnerSecurityLevels"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <Spinner
-            android:id="@+id/spinnerSecurityLevels"
+            android:id="@+id/spinnerCompanyRoleAccess"
             android:layout_width="191dp"
             android:layout_height="53dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginEnd="110dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginStart="204dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="16dp"
             android:contentDescription="Security Level"
-            app:layout_constraintBottom_toTopOf="@+id/ActivateButton"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nfc_contents" />
+
+        <Spinner
+            android:id="@+id/spinnerEmulateNFCCard"
+            android:layout_width="191dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="204dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Security Level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCompanyRoleAccess" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="100dp"
+            android:text="Access:"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerCompanyRoleAccess"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nfc_contents" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="53dp"
+            android:layout_marginEnd="86dp"
+            android:layout_marginBottom="128dp"
+            android:text="NFC Card:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerEmulateNFCCard"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -6,12 +6,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -20,11 +18,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,34 +32,56 @@ public class MainActivity extends AppCompatActivity {
     Tag myTag;
     Context context;
     TextView nfc_contents;
-    Button ActivateButton;
+    Button testButton;
+
+    String testAccessLevelString, testNFCCardString;
+    int testAccessLevelInteger, testNFCCardInteger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: Adapt spinner from "Security Levels" to "Company Roles"
-
-        //ArrayAdapter to import strings from 'strings.xml' to spinner 'spinnerSecurityLevels'
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.securitylevels, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.companyroles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //spinner for security levels
-        Spinner spinnerDivision = findViewById(R.id.spinnerSecurityLevels);
-        //set spinner values from 'strings.xml' array-adapter
-        spinnerDivision.setAdapter(adapter);
 
-        //TODO: Remove Write Functionality to be replaced with "Security Levels" If else checks
+        Spinner spinnerCompanyRoleAccess = findViewById(R.id.spinnerCompanyRoleAccess);
+        spinnerCompanyRoleAccess.setAdapter(adapter);
+
+        Spinner spinnerEmulateNFCCard = findViewById(R.id.spinnerEmulateNFCCard);
+        spinnerEmulateNFCCard.setAdapter(adapter);
 
         nfc_contents = (TextView) findViewById(R.id.nfc_contents);
-        ActivateButton =  findViewById(R.id.ActivateButton);
+        testButton =  findViewById(R.id.testButton);
         context = this;
 
-        ActivateButton.setOnClickListener(new View.OnClickListener() {
+        testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-            //TODO: Create button functionality for emulating a valid NFC card
+                //TODO: Create button functionality for emulating a valid NFC card
+
+                testAccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
+                if (testAccessLevelString == "GUEST") {
+                    testAccessLevelInteger = 0;
+                }
+                else if (testAccessLevelString == "EMPLOYEE") {
+                    testAccessLevelInteger = 1;
+                }
+                else if (testAccessLevelString == "CEO") {
+                    testAccessLevelInteger = 2;
+                }
+
+                testNFCCardString = spinnerEmulateNFCCard.getSelectedItem().toString();
+                if (testNFCCardString == "GUEST") {
+                    testNFCCardInteger = 0;
+                }
+                else if (testNFCCardString == "EMPLOYEE") {
+                    testNFCCardInteger = 1;
+                }
+                else if (testNFCCardString== "CEO") {
+                    testNFCCardInteger = 2;
+                }
 
             }
         });
@@ -74,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        //TODO: Determine if better solution for automatically detecting NFC card is available other then idle intent
 
         readFromIntent(getIntent());
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -101,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void buildTagViews(NdefMessage[] msgs) {
         if (msgs == null || msgs.length == 0) return;
-
         String text = "";
-//        String tagId = new String(msgs[0].getRecords()[0].getType());
+        // String tagId = new String(msgs[0].getRecords()[0].getType());
         byte[] payload = msgs[0].getRecords()[0].getPayload();
         String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
         int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
@@ -116,27 +135,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("UnsupportedEncoding", e.toString());
         }
 
-        nfc_contents.setText("NFC Content: " + text);
-    }
-
-    private NdefRecord createRecord(String text) throws UnsupportedEncodingException {
-        String lang       = "en";
-        byte[] textBytes  = text.getBytes();
-        byte[] langBytes  = lang.getBytes("US-ASCII");
-        int    langLength = langBytes.length;
-        int    textLength = textBytes.length;
-        byte[] payload    = new byte[1 + langLength + textLength];
-
-        // set status byte (see NDEF spec for actual bits)
-        payload[0] = (byte) langLength;
-
-        // copy langbytes and textbytes into payload
-        System.arraycopy(langBytes, 0, payload, 1,              langLength);
-        System.arraycopy(textBytes, 0, payload, 1 + langLength, textLength);
-
-        NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN,  NdefRecord.RTD_TEXT,  new byte[0], payload);
-
-        return recordNFC;
+        nfc_contents.setText("Current NFC Content: " + text);
     }
 
     @Override
