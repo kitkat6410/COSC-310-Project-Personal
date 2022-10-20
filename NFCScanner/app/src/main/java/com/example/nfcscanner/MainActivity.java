@@ -14,12 +14,15 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.animation.ObjectAnimator;
 
 import java.io.UnsupportedEncodingException;
 
@@ -158,24 +161,62 @@ public class MainActivity extends AppCompatActivity {
         //TODO: add additional function of having access text 'flashing' and return to "ACCESS PENDING" before function returns
         textViewAccess.setText("ACCESS GRANTED");
 
-        for(int i = 0; i < 5; i++) {
-            textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
-            //Thread.sleep(1000);
-            //textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
-        }
-       //textViewAccess.setText("ACCESS PENDING");
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener(){
+
+            @Override
+            public void onAnimationStart(Animation animation){
+                textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                //viewToAnimate.setVisibility(View.GONE);
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
     }
 
     private void accessDenied(TextView textViewAccess) {
         //TODO: add additional function of having access text 'flashing' and return to "ACCESS PENDING" before function returns
         textViewAccess.setText("ACCESS DENIED");
 
-        for(int i = 0; i < 5; i++) {
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener(){
 
-            textViewAccess.setTextColor(Color.parseColor("#FF0000"));
-            //Thread.sleep(1000);
-            //textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
-        }
-        //textViewAccess.setText("ACCESS PENDING");
+            @Override
+            public void onAnimationStart(Animation animation){
+                textViewAccess.setTextColor(Color.parseColor("#FF0000"));
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                //viewToAnimate.setVisibility(View.GONE);
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
     }
 }
+
+    //Animation blink = new AlphaAnimation(0.0f, 1.0f);
+     //   blink.setDuration(1000); //You can manage the blinking time with this parameter
+     //           blink.setStartOffset(20);
+      //          blink.setRepeatMode(Animation.REVERSE);
+      //          blink.setRepeatCount(3);
+      //         textViewAccess.startAnimation(blink);
