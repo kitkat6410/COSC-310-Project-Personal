@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">NFCScanner</string>
 
-    <string-array name="securitylevels">
-        <item>LEVEL 1</item>
-        <item>LEVEL 2</item>
-        <item>LEVEL 3</item>
-        <item>LEVEL 4</item>
-        <item>LEVEL 5</item>
+    <string-array name="companyroles">
+        <item>GUEST</item>
+        <item>EMPLOYEE</item>
+        <item>CEO</item>
     </string-array>
 </resources>

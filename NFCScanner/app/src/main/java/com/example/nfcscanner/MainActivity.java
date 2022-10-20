@@ -6,93 +6,118 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.nfc.FormatException;
+import android.graphics.Color;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String Error_Detected = "No NFC Tag Detected";
-    public static final String Write_Success = "Text Written Successfully!";
-    public static final String Write_Error = "Error during Writing, Try Again!";
+
+    //
     NfcAdapter nfcAdapter;
     PendingIntent pendingIntent;
     IntentFilter writingTagFilters[];
-    boolean writeMode;
+
+    //
     Tag myTag;
     Context context;
-    TextView edit_message;
     TextView nfc_contents;
-    Button ActivateButton;
+    Button testButton;
+
+    //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
+    String testAccessLevelString, testNFCCardString;
+    int testAccessLevelInteger, testNFCCardInteger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: Adapt spinner from "Security Levels" to "Company Roles"
+        //textview "textViewAccess"
+        TextView textViewAccess = findViewById(R.id.textViewAccess);
 
-        //ArrayAdapter to import strings from 'strings.xml' to spinner 'spinnerDivision'
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.securitylevels, android.R.layout.simple_spinner_item);
+        //ArrayAdapter to set spinners "SpinnerCompanyRolesAccess" and "spinnerEmulateNFCCard" to values from string.xml "companyroles"
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.companyroles, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //spinner for course division
-        Spinner spinnerDivision = findViewById(R.id.spinnerSecurityLevels);
-        //set spinner values from 'strings.xml' array-adapter
-        spinnerDivision.setAdapter(adapter);
 
-        //TODO: Remove Write Functionality to be replaced with "Security Levels" If else checks
+        //Spinner "spinnerCompanyRolesAccess"
+        Spinner spinnerCompanyRoleAccess = findViewById(R.id.spinnerCompanyRoleAccess);
+        spinnerCompanyRoleAccess.setAdapter(adapter);
 
-        edit_message = (TextView) findViewById(R.id.edit_message);
+        //Spinner "spinnerEmulateNFCCard"
+        Spinner spinnerEmulateNFCCard = findViewById(R.id.spinnerEmulateNFCCard);
+        spinnerEmulateNFCCard.setAdapter(adapter);
+
+        //
         nfc_contents = (TextView) findViewById(R.id.nfc_contents);
-        ActivateButton =  findViewById(R.id.ActivateButton);
+        testButton =  findViewById(R.id.testButton);
         context = this;
-        ActivateButton.setOnClickListener(new View.OnClickListener() {
+
+        testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if(myTag ==null) {
-                        Toast.makeText(context, Error_Detected, Toast.LENGTH_LONG).show();
-                    } else {
-                        write("PlainText|"+edit_message.getText().toString(), myTag);
-                        Toast.makeText(context, Write_Success, Toast.LENGTH_LONG ).show();
-                    }
-                } catch (IOException e) {
-                    Toast.makeText(context, Write_Error, Toast.LENGTH_LONG ).show();
-                    e.printStackTrace();
-                } catch (FormatException e) {
-                    Toast.makeText(context, Write_Error, Toast.LENGTH_LONG ).show();
-                    e.printStackTrace();
+
+                //spinner value chosen for "access level" stored to string and then integer variable
+                testAccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
+                if (testAccessLevelString.equals("GUEST")) {
+                    testAccessLevelInteger = 0;
+                }
+                else if (testAccessLevelString.equals("EMPLOYEE")) {
+                    testAccessLevelInteger = 1;
+                }
+                else if (testAccessLevelString.equals("CEO")) {
+                    testAccessLevelInteger = 2;
+                }
+
+                //spinner value chosen for "emulated NFC card" stored to string and then integer variable
+                testNFCCardString = spinnerEmulateNFCCard.getSelectedItem().toString();
+                if (testNFCCardString.equals("GUEST")) {
+                    testNFCCardInteger = 0;
+                }
+                else if (testNFCCardString.equals("EMPLOYEE")) {
+                    testNFCCardInteger = 1;
+                }
+                else if (testNFCCardString.equals("CEO")) {
+                    testNFCCardInteger = 2;
+                }
+
+                //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
+                if (testNFCCardInteger < testAccessLevelInteger) {
+                    accessDenied(textViewAccess);
+                }
+                else if (testNFCCardInteger >= testAccessLevelInteger) {
+                    accessGranted(textViewAccess);
                 }
             }
-
         });
+
+        //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter == null){
             Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        //TODO: Determine if better solution for automatically detecting NFC card is available other then idle intent
         readFromIntent(getIntent());
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writingTagFilters = new IntentFilter[] { tagDetected };
     }
+
     private void readFromIntent(Intent intent) {
         String action = intent.getAction();
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
@@ -109,11 +134,11 @@ public class MainActivity extends AppCompatActivity {
             buildTagViews(msgs);
         }
     }
+
     private void buildTagViews(NdefMessage[] msgs) {
         if (msgs == null || msgs.length == 0) return;
-
         String text = "";
-//        String tagId = new String(msgs[0].getRecords()[0].getType());
+        // String tagId = new String(msgs[0].getRecords()[0].getType());
         byte[] payload = msgs[0].getRecords()[0].getPayload();
         String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
         int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
@@ -126,41 +151,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("UnsupportedEncoding", e.toString());
         }
 
-        nfc_contents.setText("NFC Content: " + text);
-    }
-
-    //TODO: Write Functionality Unnecessary, Remove Later
-
-    private void write(String text, Tag tag) throws IOException, FormatException {
-        NdefRecord[] records = { createRecord(text) };
-        NdefMessage message = new NdefMessage(records);
-        // Get an instance of Ndef for the tag.
-        Ndef ndef = Ndef.get(tag);
-        // Enable I/O
-        ndef.connect();
-        // Write the message
-        ndef.writeNdefMessage(message);
-        // Close the connection
-        ndef.close();
-    }
-    private NdefRecord createRecord(String text) throws UnsupportedEncodingException {
-        String lang       = "en";
-        byte[] textBytes  = text.getBytes();
-        byte[] langBytes  = lang.getBytes("US-ASCII");
-        int    langLength = langBytes.length;
-        int    textLength = textBytes.length;
-        byte[] payload    = new byte[1 + langLength + textLength];
-
-        // set status byte (see NDEF spec for actual bits)
-        payload[0] = (byte) langLength;
-
-        // copy langbytes and textbytes into payload
-        System.arraycopy(langBytes, 0, payload, 1,              langLength);
-        System.arraycopy(textBytes, 0, payload, 1 + langLength, textLength);
-
-        NdefRecord recordNFC = new NdefRecord(NdefRecord.TNF_WELL_KNOWN,  NdefRecord.RTD_TEXT,  new byte[0], payload);
-
-        return recordNFC;
+        nfc_contents.setText("Current NFC Content: " + text);
     }
 
     @Override
@@ -173,33 +164,61 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onPause(){
-        super.onPause();
-        WriteModeOff();
+    private void accessGranted(TextView textViewAccess) {
+        //on successful access attempt, change "textViewAccess" to access granted and play animation
+        textViewAccess.setText("ACCESS GRANTED");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener(){
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation){
+                textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        WriteModeOn();
+    private void accessDenied(TextView textViewAccess) {
+        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        textViewAccess.setText("ACCESS DENIED");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener(){
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation){
+                textViewAccess.setTextColor(Color.parseColor("#FF0000"));
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
     }
-
-
-    /******************************************************************************
-     **********************************Enable Write********************************
-     ******************************************************************************/
-    private void WriteModeOn(){
-        writeMode = true;
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, writingTagFilters, null);
-    }
-    /******************************************************************************
-     **********************************Disable Write*******************************
-     ******************************************************************************/
-    private void WriteModeOff(){
-        writeMode = false;
-        nfcAdapter.disableForegroundDispatch(this);
-    }
-
-
 }
