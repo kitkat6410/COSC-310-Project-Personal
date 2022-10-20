@@ -28,16 +28,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String Error_Detected = "No NFC Tag Detected";
-    public static final String Write_Success = "Text Written Successfully!";
-    public static final String Write_Error = "Error during Writing, Try Again!";
+
     NfcAdapter nfcAdapter;
     PendingIntent pendingIntent;
     IntentFilter writingTagFilters[];
-    boolean writeMode;
+
     Tag myTag;
     Context context;
-    TextView edit_message;
     TextView nfc_contents;
     Button ActivateButton;
 
@@ -66,9 +63,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            //TODO: Create button functionality for emulating a valid NFC card
+
             }
         });
 
+        //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter == null){
             Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
@@ -148,34 +148,4 @@ public class MainActivity extends AppCompatActivity {
             myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         }
     }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        WriteModeOff();
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        WriteModeOn();
-    }
-
-
-    /******************************************************************************
-     **********************************Enable Write********************************
-     ******************************************************************************/
-    private void WriteModeOn(){
-        writeMode = true;
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, writingTagFilters, null);
-    }
-    /******************************************************************************
-     **********************************Disable Write*******************************
-     ******************************************************************************/
-    private void WriteModeOff(){
-        writeMode = false;
-        nfcAdapter.disableForegroundDispatch(this);
-    }
-
-
 }
