@@ -48,51 +48,40 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: Adapt spinner from "Security Levels" to "Company Roles"
 
-        //ArrayAdapter to import strings from 'strings.xml' to spinner 'spinnerDivision'
+        //ArrayAdapter to import strings from 'strings.xml' to spinner 'spinnerSecurityLevels'
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.securitylevels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //spinner for course division
+        //spinner for security levels
         Spinner spinnerDivision = findViewById(R.id.spinnerSecurityLevels);
         //set spinner values from 'strings.xml' array-adapter
         spinnerDivision.setAdapter(adapter);
 
         //TODO: Remove Write Functionality to be replaced with "Security Levels" If else checks
 
-        edit_message = (TextView) findViewById(R.id.edit_message);
         nfc_contents = (TextView) findViewById(R.id.nfc_contents);
         ActivateButton =  findViewById(R.id.ActivateButton);
         context = this;
+
         ActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if(myTag ==null) {
-                        Toast.makeText(context, Error_Detected, Toast.LENGTH_LONG).show();
-                    } else {
-                        write("PlainText|"+edit_message.getText().toString(), myTag);
-                        Toast.makeText(context, Write_Success, Toast.LENGTH_LONG ).show();
-                    }
-                } catch (IOException e) {
-                    Toast.makeText(context, Write_Error, Toast.LENGTH_LONG ).show();
-                    e.printStackTrace();
-                } catch (FormatException e) {
-                    Toast.makeText(context, Write_Error, Toast.LENGTH_LONG ).show();
-                    e.printStackTrace();
-                }
-            }
 
+            }
         });
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter == null){
             Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
             finish();
         }
+
         readFromIntent(getIntent());
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writingTagFilters = new IntentFilter[] { tagDetected };
     }
+
     private void readFromIntent(Intent intent) {
         String action = intent.getAction();
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
@@ -109,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             buildTagViews(msgs);
         }
     }
+
     private void buildTagViews(NdefMessage[] msgs) {
         if (msgs == null || msgs.length == 0) return;
 
@@ -129,20 +119,6 @@ public class MainActivity extends AppCompatActivity {
         nfc_contents.setText("NFC Content: " + text);
     }
 
-    //TODO: Write Functionality Unnecessary, Remove Later
-
-    private void write(String text, Tag tag) throws IOException, FormatException {
-        NdefRecord[] records = { createRecord(text) };
-        NdefMessage message = new NdefMessage(records);
-        // Get an instance of Ndef for the tag.
-        Ndef ndef = Ndef.get(tag);
-        // Enable I/O
-        ndef.connect();
-        // Write the message
-        ndef.writeNdefMessage(message);
-        // Close the connection
-        ndef.close();
-    }
     private NdefRecord createRecord(String text) throws UnsupportedEncodingException {
         String lang       = "en";
         byte[] textBytes  = text.getBytes();
