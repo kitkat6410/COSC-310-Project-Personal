@@ -3,6 +3,7 @@
 
     <string-array name="companyroles">
         <item>GUEST</item>
+        <item>CONFERENCE</item>
         <item>EMPLOYEE</item>
         <item>CEO</item>
     </string-array>

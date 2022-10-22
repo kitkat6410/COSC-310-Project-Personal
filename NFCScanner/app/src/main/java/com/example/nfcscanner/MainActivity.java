@@ -69,32 +69,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //TODO: Change this and below to switch case rather than if statements?
                 //spinner value chosen for "access level" stored to string and then integer variable
                 testAccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
                 if (testAccessLevelString.equals("GUEST")) {
+                    testAccessLevelInteger = 1;
+                }
+                else if (testAccessLevelString.equals("CONFERENCE")) {
                     testAccessLevelInteger = 0;
                 }
                 else if (testAccessLevelString.equals("EMPLOYEE")) {
-                    testAccessLevelInteger = 1;
+                    testAccessLevelInteger = 2;
                 }
                 else if (testAccessLevelString.equals("CEO")) {
-                    testAccessLevelInteger = 2;
+                    testAccessLevelInteger = 3;
                 }
 
                 //spinner value chosen for "emulated NFC card" stored to string and then integer variable
                 testNFCCardString = spinnerEmulateNFCCard.getSelectedItem().toString();
                 if (testNFCCardString.equals("GUEST")) {
+                    testNFCCardInteger = 1;
+                }
+                else if (testAccessLevelString.equals("CONFERENCE")) {
                     testNFCCardInteger = 0;
                 }
                 else if (testNFCCardString.equals("EMPLOYEE")) {
-                    testNFCCardInteger = 1;
+                    testNFCCardInteger = 2;
                 }
                 else if (testNFCCardString.equals("CEO")) {
-                    testNFCCardInteger = 2;
+                    testNFCCardInteger = 3;
                 }
 
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
-                if (testNFCCardInteger < testAccessLevelInteger) {
+                if (testNFCCardInteger == 0 && testAccessLevelInteger == 0) {
+                    accessGranted(textViewAccess);
+                }
+                else if (testNFCCardInteger < testAccessLevelInteger) {
                     accessDenied(textViewAccess);
                 }
                 else if (testNFCCardInteger >= testAccessLevelInteger) {
