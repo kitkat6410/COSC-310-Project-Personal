@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String AccessLevelString, stringNFCContent;
-    int AccessLevelInteger, intNFCContent;
+    int intAccessLevel, intNFCContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerCompanyRoleAccess.setAdapter(adapter);
 
         //
-        nfc_contents = (TextView) findViewById(R.id.nfc_contents);
+        nfc_contents = findViewById(R.id.nfc_contents);
         testButton =  findViewById(R.id.testButton);
         context = this;
 
@@ -69,16 +69,16 @@ public class MainActivity extends AppCompatActivity {
                 AccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
                 switch (AccessLevelString) {
                     case "CONFERENCE":
-                        AccessLevelInteger = 0;
+                        intAccessLevel = 0;
                         break;
                     case "GUEST":
-                        AccessLevelInteger = 1;
+                        intAccessLevel = 1;
                         break;
                     case "EMPLOYEE":
-                        AccessLevelInteger = 2;
+                        intAccessLevel = 2;
                         break;
                     case "CEO":
-                        AccessLevelInteger = 3;
+                        intAccessLevel = 3;
                         break;
                 }
 
@@ -100,13 +100,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
-                if (intNFCContent == 0 && AccessLevelInteger == 0) {
-                    accessGranted(textViewAccess);
-                }
-                else if (intNFCContent < AccessLevelInteger ) {
+                if (intNFCContent != 0 && intAccessLevel == 0) {
                     accessDenied(textViewAccess);
                 }
-                else if (intNFCContent >= AccessLevelInteger) {
+                else if (intNFCContent < intAccessLevel) {
+                    accessDenied(textViewAccess);
+                }
+                else {
                     accessGranted(textViewAccess);
                 }
             }
