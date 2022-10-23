@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
     Button testButton;
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
-    String testAccessLevelString, testNFCCardString;
-    int testAccessLevelInteger, testNFCCardInteger;
+    String AccessLevelString, stringNFCContent;
+    int AccessLevelInteger, intNFCContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity {
         Spinner spinnerCompanyRoleAccess = findViewById(R.id.spinnerCompanyRoleAccess);
         spinnerCompanyRoleAccess.setAdapter(adapter);
 
-        //Spinner "spinnerEmulateNFCCard"
-        Spinner spinnerEmulateNFCCard = findViewById(R.id.spinnerEmulateNFCCard);
-        spinnerEmulateNFCCard.setAdapter(adapter);
-
         //
         nfc_contents = (TextView) findViewById(R.id.nfc_contents);
         testButton =  findViewById(R.id.testButton);
@@ -69,45 +65,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //TODO: Change this and below to switch case rather than if statements?
                 //spinner value chosen for "access level" stored to string and then integer variable
-                testAccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
-                if (testAccessLevelString.equals("GUEST")) {
-                    testAccessLevelInteger = 1;
-                }
-                else if (testAccessLevelString.equals("CONFERENCE")) {
-                    testAccessLevelInteger = 0;
-                }
-                else if (testAccessLevelString.equals("EMPLOYEE")) {
-                    testAccessLevelInteger = 2;
-                }
-                else if (testAccessLevelString.equals("CEO")) {
-                    testAccessLevelInteger = 3;
+                AccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
+                switch (AccessLevelString) {
+                    case "CONFERENCE":
+                        AccessLevelInteger = 0;
+                        break;
+                    case "GUEST":
+                        AccessLevelInteger = 1;
+                        break;
+                    case "EMPLOYEE":
+                        AccessLevelInteger = 2;
+                        break;
+                    case "CEO":
+                        AccessLevelInteger = 3;
+                        break;
                 }
 
                 //spinner value chosen for "emulated NFC card" stored to string and then integer variable
-                testNFCCardString = spinnerEmulateNFCCard.getSelectedItem().toString();
-                if (testNFCCardString.equals("GUEST")) {
-                    testNFCCardInteger = 1;
-                }
-                else if (testAccessLevelString.equals("CONFERENCE")) {
-                    testNFCCardInteger = 0;
-                }
-                else if (testNFCCardString.equals("EMPLOYEE")) {
-                    testNFCCardInteger = 2;
-                }
-                else if (testNFCCardString.equals("CEO")) {
-                    testNFCCardInteger = 3;
+
+                switch (stringNFCContent) {
+                    case "CONFERENCE":
+                        intNFCContent = 0;
+                        break;
+                    case "GUEST":
+                        intNFCContent = 1;
+                        break;
+                    case "EMPLOYEE":
+                        intNFCContent = 2;
+                        break;
+                    case "CEO":
+                        intNFCContent = 3;
+                        break;
                 }
 
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
-                if (testNFCCardInteger == 0 && testAccessLevelInteger == 0) {
+                if (intNFCContent == 0 && AccessLevelInteger == 0) {
                     accessGranted(textViewAccess);
                 }
-                else if (testNFCCardInteger < testAccessLevelInteger) {
+                else if (intNFCContent < AccessLevelInteger ) {
                     accessDenied(textViewAccess);
                 }
-                else if (testNFCCardInteger >= testAccessLevelInteger) {
+                else if (intNFCContent >= AccessLevelInteger) {
                     accessGranted(textViewAccess);
                 }
             }
@@ -147,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void buildTagViews(NdefMessage[] msgs) {
         if (msgs == null || msgs.length == 0) return;
-        String text = "";
+        stringNFCContent = "";
         // String tagId = new String(msgs[0].getRecords()[0].getType());
         byte[] payload = msgs[0].getRecords()[0].getPayload();
         String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
@@ -156,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // Get the Text
-            text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+            stringNFCContent = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
         } catch (UnsupportedEncodingException e) {
             Log.e("UnsupportedEncoding", e.toString());
         }
 
-        nfc_contents.setText("Current NFC Content: " + text);
+        nfc_contents.setText("Current NFC Content: " + stringNFCContent);
     }
 
     @Override
