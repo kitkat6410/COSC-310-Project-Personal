@@ -2,8 +2,8 @@
     <string name="app_name">NFCScanner</string>
 
     <string-array name="companyroles">
-        <item>GUEST</item>
         <item>CONFERENCE</item>
+        <item>GUEST</item>
         <item>EMPLOYEE</item>
         <item>CEO</item>
     </string-array>
