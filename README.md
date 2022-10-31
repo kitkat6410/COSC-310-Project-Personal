@@ -30,10 +30,10 @@ To implement the NFCScanner, download the latest version of android studio, clon
 ## Jaden Edgar 
 
 - Redesign NFCScanner UI to be more intuitive
--   More concise UI will allow for less user error in usage and input, and improve clarity of how app should be used
+  - More concise UI will allow for less user error in usage and input, and improve clarity of how app should be used
 - Add tutorial on first startup to better explain user flow of NFCscanner
--   Tutorial will give clear explanation of usage of app such that user flow is clearly layed out, aswell as how NFC cards should be used
+  - Tutorial will give clear explanation of usage of app such that user flow is clearly layed out, aswell as how NFC cards should be used
 - Refactor 'Security levels' in NFCscanner to 'Room to be accessed', make 'Security levels' native part of security checking
--   As part of connecting the NFCScanner app to the processing office layout, rather then selecting which 'role' you have access to and opening all relavent doors, the user must now select which specific room they wish to access, with their security level being utomatically determined in the backround once they scan their NFC card
-- implement NFCscanner netowrking capabilities to later be connected to processing 'project_demo' app
--  Essential in order to visually represent a 'Access Granted' or 'Access Denied' event through the processing office floor layout, aswell as storing logs of access attempts in database to be determined
+  - As part of connecting the NFCScanner app to the processing office layout, rather then selecting which 'role' you have access to and opening all relavent doors, the user must now select which specific room they wish to access, with their security level being utomatically determined in the backround once they scan their NFC card
+- Implement NFCscanner netowrking capabilities to later be connected to processing 'project_demo' app
+  - Essential in order to visually represent a 'Access Granted' or 'Access Denied' event through the processing office floor layout, aswell as storing logs of access attempts in database to be determined
