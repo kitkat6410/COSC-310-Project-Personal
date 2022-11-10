@@ -19,7 +19,7 @@ public class Door{
   public void setAccess(boolean c){
     this.access = c;
   }
-  public boolean getAccess(){
-    return this.access;
-}
+  public void setTime(String t){
+    this.time = t;
+  }
 }
