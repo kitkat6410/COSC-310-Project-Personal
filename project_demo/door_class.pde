@@ -22,3 +22,4 @@ public class Door{
   public boolean getAccess(){
     return this.access;
 }
+}

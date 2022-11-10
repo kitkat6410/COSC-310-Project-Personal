@@ -50,6 +50,7 @@ void setup(){
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
+  androidInfo(3,3, "Example");
 
 
 
@@ -95,7 +96,7 @@ void draw(){
    }
 
   }
-  androidInfo(1, 1, "yea");
+  
  // a = millis();
   background(bg);
   strokeWeight(6);
