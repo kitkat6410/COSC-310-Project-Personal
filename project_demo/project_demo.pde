@@ -52,6 +52,7 @@ void setup(){
   confdoor = false;
 
 
+
     
   
 }
@@ -94,6 +95,7 @@ void draw(){
    }
 
   }
+  androidInfo(1, 1, "yea");
  // a = millis();
   background(bg);
   strokeWeight(6);
