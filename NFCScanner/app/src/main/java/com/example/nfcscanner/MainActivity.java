@@ -1,7 +1,5 @@
 package com.example.nfcscanner;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +14,22 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     TextView nfc_contents;
     Button testButton;
+
+    //Kyra's variables
+    boolean access;
+    Calendar calendar;
+    SimpleDateFormat dateFormat;
+    String date;
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String AccessLevelString, stringNFCContent;
@@ -64,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                calendar = Calendar.getInstance();
+                dateFormat = new SimpleDateFormat("dd/MMM/yyyy");
+                date = dateFormat.format(calendar.getTime());
+
 
                 //spinner value chosen for "access level" stored to string and then integer variable
                 AccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
@@ -102,12 +120,55 @@ public class MainActivity extends AppCompatActivity {
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
                 if (intNFCContent != 0 && intAccessLevel == 0) {
                     accessDenied(textViewAccess);
-                }
-                else if (intNFCContent < intAccessLevel) {
+                } else if (intNFCContent < intAccessLevel) {
                     accessDenied(textViewAccess);
-                }
-                else {
+                } else {
                     accessGranted(textViewAccess);
+                }
+                String dir = "..\\COSC-310-Project";
+                File folder = new File(dir);
+                File[] a = folder.listFiles();
+                try {
+                    for (int i = 0; i < a.length; i++) {
+                        if (a[i].getName() == "data.txt") {
+                            FileOutputStream out = new FileOutputStream(a[i].getName());
+                            PrintWriter outp = new PrintWriter(a[i].getName());
+                            out.write(0); //temporary, need door numbers
+                            outp.write(String.valueOf(access));
+                            out.write(intAccessLevel);
+                            outp.write(stringNFCContent);
+                            outp.write(date);
+
+                        }
+                    }
+                } catch (Exception e) {
+                    File data = new File("data.txt");
+                    FileOutputStream out = null;
+                    try {
+                        out = new FileOutputStream("data.txt");
+                    } catch (FileNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                    PrintWriter outp = null;
+                    try {
+                        outp = new PrintWriter("data.txt");
+                    } catch (FileNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    try {
+                        out.write(0); //temporary, need door numbers
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    outp.write(String.valueOf(access));
+                    try {
+                        out.write(intAccessLevel);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    outp.write(stringNFCContent);
+                    outp.write(date);
                 }
             }
         });
@@ -174,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
     private void accessGranted(TextView textViewAccess) {
         //on successful access attempt, change "textViewAccess" to access granted and play animation
         textViewAccess.setText("ACCESS GRANTED");
-
+        access = true;
         //settings for animation
         Animation blink = new AlphaAnimation(0.f, 1.f);
         blink.setDuration(500);
@@ -203,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
     private void accessDenied(TextView textViewAccess) {
         //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
         textViewAccess.setText("ACCESS DENIED");
-
+        access = false;
         //settings for animation
         Animation blink = new AlphaAnimation(0.f, 1.f);
         blink.setDuration(500);
