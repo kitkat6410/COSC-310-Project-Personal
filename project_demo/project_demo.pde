@@ -50,7 +50,7 @@ void setup(){
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
-  androidInfo(1,1, "Example");
+  androidInfo(1, true, 1, "Example", "11-Nov-2022");
 
 
 

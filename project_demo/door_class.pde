@@ -5,10 +5,12 @@ public class Door{
   String accessType; //??
   String time;
   
-  public Door(int num, int level, String type){
+  public Door(int num, boolean acc, int level, String type, String t){
     numDoor = num;
+    access = acc;
     accessLevel = level;
     accessType = type;
+    time = t;
   }
   public int getNum(){
     return this.numDoor;
@@ -16,10 +18,5 @@ public class Door{
   public int getLevel(){
     return this.accessLevel;
   }
-  public void setAccess(boolean c){
-    this.access = c;
-  }
-  public void setTime(String t){
-    this.time = t;
-  }
+
 }
