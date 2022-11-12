@@ -29,7 +29,7 @@ public class InsertValues
 		app.connect();
 		app.init();
 						
-		app.addLog("3", true, "3", "penis");
+		
       
         
         app.close();        		
@@ -59,7 +59,7 @@ public class InsertValues
 	public Connection connect() throws SQLException
 	{
 	    // TODO: Fill in your connection information
-		String url = "jdbc:mysql://localhost/testuser"; 
+		String url = "jdbc:mysql://localhost/mydb"; 
 		String uid = "testuser";        
 		String pw = "304testpw";
 

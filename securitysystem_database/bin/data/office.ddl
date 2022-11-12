@@ -8,6 +8,6 @@ CREATE TABLE door (
  accessLevel CHAR(1),
  accessType VARCHAR(20),
  time DATETIME,
- PRIMARY KEY (numDoor));
+ PRIMARY KEY (time));
 )
 
