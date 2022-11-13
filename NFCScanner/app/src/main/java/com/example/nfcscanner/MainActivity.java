@@ -289,19 +289,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendData(String stringNFCContent, int intRoom, boolean access) {
         DataOutputStream dataOutputStream = null;
-        DataInputStream dataInputStream = null;
 
-        try(Socket socket = new Socket("10.0.0.141",4000)){
-            dataInputStream = new DataInputStream(socket.getInputStream());
+        try(Socket socket = new Socket("10.0.0.14",4000)){
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
-                String accessAttemptInfo = (stringNFCContent + "," + intRoom + "," + access);
-                dataOutputStream.writeUTF(accessAttemptInfo);
+                    String accessAttemptInfo = (stringNFCContent + "," + intRoom + "," + access);
+                    dataOutputStream.writeUTF(accessAttemptInfo);
 
-
-        }catch (Exception e){
+        }   catch (Exception e){
             System.out.println(e.toString());
         }
     }
-
 }
