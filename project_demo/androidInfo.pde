@@ -116,12 +116,12 @@ public void androidInfo(String RN, String DTA, boolean a, String t){
      boolean r = false;
         File folder = new File(dir); //<>//
         File[] k = folder.listFiles(); //k is null f**k, not null but that's not generic dir
-        print(k.length);
         //FileWriter outputfile = new FileWriter("data.csv");
         for(int i = 0; i < k.length; i++){
-            
+  
               try{
-                if(k[i].getName() == "database.csv") {
+     
+                if(k[i].getName().equals("database.csv")) {
                   r = true;
                 CSVWriter out = new CSVWriter(new FileWriter(k[i].getName()), ',', CSVWriter.NO_QUOTE_CHARACTER,
                                          CSVWriter.DEFAULT_ESCAPE_CHARACTER,

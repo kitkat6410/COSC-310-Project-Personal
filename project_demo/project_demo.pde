@@ -31,6 +31,7 @@ double b5;
 double b6;
 double b7;
 double b8;
+String message;
 
 
 
@@ -78,13 +79,12 @@ void draw(){
             System.out.println(clientSocket+" connected\n");
             dataInputStream = new DataInputStream(clientSocket.getInputStream());
            dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-
-
-            String message;
-            
+                String temp = message;
                 message = dataInputStream.readUTF();
+                if(!(temp.equals(message))){
                 System.out.println(message);
-                ServerMeth(message);
+                ServerMethod(message);
+                }
               
             
         } catch (Exception e){
