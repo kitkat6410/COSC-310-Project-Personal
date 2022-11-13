@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.os.StrictMode;
 import java.io.UnsupportedEncodingException;
 
 import java.io.*;
@@ -28,6 +29,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     //
     NfcAdapter nfcAdapter;
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         //textview "textViewAccess"
         TextView textViewAccess = findViewById(R.id.textViewAccess);
@@ -285,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
         DataOutputStream dataOutputStream = null;
         DataInputStream dataInputStream = null;
 
-        try(Socket socket = new Socket("localhost",5000)){
+        try(Socket socket = new Socket("10.0.0.141",4000)){
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
