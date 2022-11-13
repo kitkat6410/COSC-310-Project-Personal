@@ -1,3 +1,8 @@
+import java.io.FileWriter;
+import java.net.Socket;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.ServerSocket;
 PImage bg;
 color g;
 color r;
@@ -30,7 +35,7 @@ double b8;
 
 
 void setup(){ 
- size(1280, 1038);
+ size(1280, 1038); //<>//
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
   r = color(#FF0000);
@@ -50,7 +55,11 @@ void setup(){
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
-  androidInfo(1, true, 1, "Example", "11-Nov-2022");
+  androidInfo("EMPLOYEE", "2", true, ""); //EXAMPLE ONLY***
+  
+
+
+
 
 
 
@@ -59,45 +68,68 @@ void setup(){
 }
 
 
-void draw(){  
+void draw(){
+
+   try(ServerSocket serverSocket = new ServerSocket(5000)){ //<>//
+       DataOutputStream dataOutputStream = null;
+      DataInputStream dataInputStream = null;
+            System.out.println("listening to port:5000");
+            Socket clientSocket = serverSocket.accept();
+            System.out.println(clientSocket+" connected\n");
+            dataInputStream = new DataInputStream(clientSocket.getInputStream());
+           dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+
+
+            String message;
+            
+                message = dataInputStream.readUTF();
+                System.out.println(message);
+                ServerMeth(message);
+              
+            
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+    
+
   // a is how many milliseconds it has been since the start of the program
   a = millis();//a - b# = how much time has passed since a certain door has been clicked
   if(a-b1 >= 3000){  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
     col_main = r;
-   if(a-b2 >= 3000){
-    kitchendoor = false;
-    col_kitchen = r;
+   if(a-b2 >= 3000){ //conferencedoor
+    confdoor = false;
+    col_conference = r;
    }
-   if(a-b3 >= 3000){
-    officedoor1 = false;
-    col_office_1 = r;
+   if(a-b3 >= 3000){ //bathroom1
+    bathroomdoor1 = false;
+    col_bathroom_1 = r;
     
    }
-   if(a-b4 >= 3000){
-    officedoor2 = false;
-    col_office_2 = r;
+   if(a-b4 >= 3000){ //bathroom2
+    bathroomdoor1 = false;
+    col_bathroom_2 = r;
    }
-   if(a-b5 >= 3000){
+   if(a-b5 >= 3000){ //ceo office
     bigofficedoor = false;
     col_big_office = r;
    }
-   if(a-b6 >= 3000){
-    bathroomdoor1 = false;
-    col_bathroom_1 = r;
+   if(a-b6 >= 3000){ //office2
+    officedoor2 = false;
+    col_office_2 = r;
    }
-   if(a-b7 >= 3000){
-    bathroomdoor2 = false;
-    col_bathroom_2 = r;
+   if(a-b7 >= 3000){ //office1
+    officedoor1 = false;
+    col_office_1 = r;
    }
-   if(a-b8>= 3000){
-    confdoor = false;
-    col_conference = r;
+   if(a-b8>= 3000){ //kitchen
+    kitchendoor = false;
+    col_kitchen = r;
    }
 
   }
   
- // a = millis();
   background(bg);
   strokeWeight(6);
   stroke(col_main);
