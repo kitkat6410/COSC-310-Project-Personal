@@ -23,6 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import java.io.UnsupportedEncodingException;
 
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
 public class MainActivity extends AppCompatActivity {
 
     //
@@ -114,31 +118,47 @@ public class MainActivity extends AppCompatActivity {
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
                 switch (intNFCContent) {
                     case 0:
-                        if (intRoom ==  1)
+                        if (intRoom ==  1) {
                             accessGranted(textViewAccess);
-                        else
+                            sendData(stringNFCContent, intRoom, true);
+                        }
+                        else {
                             accessDenied(textViewAccess);
+                            sendData(stringNFCContent, intRoom, false);
+                        }
                         break;
 
                     case 1:
-                        if (intRoom == 0 || intRoom == 2 || intRoom == 3)
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3) {
                             accessGranted(textViewAccess);
-                        else
+                            sendData(stringNFCContent, intRoom, true);
+                        }
+                        else {
                             accessDenied(textViewAccess);
+                            sendData(stringNFCContent, intRoom, false);
+                        }
                         break;
 
                     case 2:
-                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7)
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7) {
                             accessGranted(textViewAccess);
-                        else
+                            sendData(stringNFCContent, intRoom, true);
+                        }
+                        else {
                             accessDenied(textViewAccess);
+                            sendData(stringNFCContent, intRoom, false);
+                        }
                         break;
 
                     case 3:
-                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7)
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7) {
                             accessGranted(textViewAccess);
-                        else
+                            sendData(stringNFCContent, intRoom, true);
+                        }
+                        else {
                             accessDenied(textViewAccess);
+                            sendData(stringNFCContent, intRoom, false);
+                        }
                         break;
                 }
             }
@@ -260,4 +280,22 @@ public class MainActivity extends AppCompatActivity {
         });
         textViewAccess.startAnimation(blink);
     }
+
+    private void sendData(String stringNFCContent, int intRoom, boolean access) {
+        DataOutputStream dataOutputStream = null;
+        DataInputStream dataInputStream = null;
+
+        try(Socket socket = new Socket("localhost",5000)){
+            dataInputStream = new DataInputStream(socket.getInputStream());
+            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+                String accessAttemptInfo = (stringNFCContent + "," + intRoom + "," + access);
+                dataOutputStream.writeUTF(accessAttemptInfo);
+
+
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+    }
+
 }
