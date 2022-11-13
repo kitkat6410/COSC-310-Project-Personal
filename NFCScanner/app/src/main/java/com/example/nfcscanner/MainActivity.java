@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
     Button testButton;
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
-    String AccessLevelString, stringNFCContent;
-    int intAccessLevel, intNFCContent;
+    String roomString, stringNFCContent;
+    int intRoom, intNFCContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
         TextView textViewAccess = findViewById(R.id.textViewAccess);
 
         //ArrayAdapter to set spinners "SpinnerCompanyRolesAccess" and "spinnerEmulateNFCCard" to values from string.xml "companyroles"
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.companyroles, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rooms, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //Spinner "spinnerCompanyRolesAccess"
-        Spinner spinnerCompanyRoleAccess = findViewById(R.id.spinnerCompanyRoleAccess);
-        spinnerCompanyRoleAccess.setAdapter(adapter);
+        Spinner spinnerRoomAccess = findViewById(R.id.spinnerRoomAccess);
+        spinnerRoomAccess.setAdapter(adapter);
 
         //
         nfc_contents = findViewById(R.id.nfc_contents);
@@ -66,19 +66,31 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //spinner value chosen for "access level" stored to string and then integer variable
-                AccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
-                switch (AccessLevelString) {
-                    case "CONFERENCE":
-                        intAccessLevel = 0;
+                roomString = spinnerRoomAccess.getSelectedItem().toString();
+                switch (roomString) {
+                    case "FRONT DOOR":
+                        intRoom = 0;
                         break;
-                    case "GUEST":
-                        intAccessLevel = 1;
+                    case "CONFERENCE ROOM":
+                        intRoom = 1;
                         break;
-                    case "EMPLOYEE":
-                        intAccessLevel = 2;
+                    case "BATHROOM 1":
+                        intRoom = 2;
                         break;
-                    case "CEO":
-                        intAccessLevel = 3;
+                    case "BATHROOM 2":
+                        intRoom = 3;
+                        break;
+                    case "CEO OFFICE":
+                        intRoom = 4;
+                        break;
+                    case "OFFICE 2":
+                        intRoom = 5;
+                        break;
+                    case "OFFICE 1":
+                        intRoom = 6;
+                        break;
+                    case "KITCHEN":
+                        intRoom = 7;
                         break;
                 }
 
@@ -100,14 +112,34 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
-                if (intNFCContent != 0 && intAccessLevel == 0) {
-                    accessDenied(textViewAccess);
-                }
-                else if (intNFCContent < intAccessLevel) {
-                    accessDenied(textViewAccess);
-                }
-                else {
-                    accessGranted(textViewAccess);
+                switch (intNFCContent) {
+                    case 0:
+                        if (intRoom ==  1)
+                            accessGranted(textViewAccess);
+                        else
+                            accessDenied(textViewAccess);
+                        break;
+
+                    case 1:
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3)
+                            accessGranted(textViewAccess);
+                        else
+                            accessDenied(textViewAccess);
+                        break;
+
+                    case 2:
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7)
+                            accessGranted(textViewAccess);
+                        else
+                            accessDenied(textViewAccess);
+                        break;
+
+                    case 3:
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7)
+                            accessGranted(textViewAccess);
+                        else
+                            accessDenied(textViewAccess);
+                        break;
                 }
             }
         });

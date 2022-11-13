@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">NFCScanner</string>
 
-    <string-array name="companyroles">
-        <item>CONFERENCE</item>
-        <item>GUEST</item>
-        <item>EMPLOYEE</item>
-        <item>CEO</item>
+    <string-array name="rooms">
+        <item>FRONT DOOR</item>
+        <item>CONFERENCE ROOM</item>
+        <item>BATHROOM 1</item>
+        <item>BATHROOM 2</item>
+        <item>CEO OFFICE</item>
+        <item>OFFICE 2</item>
+        <item>OFFICE 1</item>
+        <item>KITCHEN</item>
     </string-array>
 </resources>
