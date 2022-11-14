@@ -46,9 +46,9 @@ Boolean header;
 
 
 
-void setup(){ 
- size(1280, 1038);
- header = false;
+void setup() {
+  size(1280, 1038);
+  header = false;
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
   r = color(#FF0000);
@@ -70,86 +70,72 @@ void setup(){
   confdoor = false;
   temp = "temp";
   message = "message";
-//  message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
-File directory =new File("./");
-print(directory.getAbsolutePath()); //<>//
-
-
-  
-
-
-
-
-
-
-    
-  
+  //message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
 }
+ //<>//
 
-
-void draw(){
- a = millis();//a - b# = how much time has passed since a certain door has been clicked
+void draw() {
+  a = millis();//a - b# = how much time has passed since a certain door has been clicked
   DataOutputStream dataOutputStream = null;
- DataInputStream dataInputStream = null;
-   try(ServerSocket serverSocket = new ServerSocket(4000)){
-      
-         // System.out.println("listening to port:4000");
-          Socket clientSocket = serverSocket.accept(); //need to comment out to try example
-          System.out.println(clientSocket+" connected\n"); //need to comment out to try example
-          dataInputStream = new DataInputStream(clientSocket.getInputStream()); //need to comment out to try example
-         dataOutputStream = new DataOutputStream(clientSocket.getOutputStream()); //need to comment out to try example
-                 
-       
-             temp = message; //need to comment out to try example
-             message = dataInputStream.readUTF(); //need to comment out to try example
-                if(!(temp.equals(message))){
-                System.out.println(message);
-                ServerMethod(message);
-                }
-                // a is how many milliseconds it has been since the start of the program
-   }catch(Exception e){
-   }
-  if(a-b1 >= 3000){  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
+  DataInputStream dataInputStream = null;
+  try(ServerSocket serverSocket = new ServerSocket(4000)) {
+
+    System.out.println("listening to port:4000");
+    Socket clientSocket = serverSocket.accept(); //need to comment out to try example
+    System.out.println(clientSocket+" connected\n"); //need to comment out to try example
+    dataInputStream = new DataInputStream(clientSocket.getInputStream()); //need to comment out to try example
+    dataOutputStream = new DataOutputStream(clientSocket.getOutputStream()); //need to comment out to try example
+
+
+    temp = message; //need to comment out to try example
+    message = dataInputStream.readUTF(); //need to comment out to try example
+    if (!(temp.equals(message))) {
+      System.out.println(message);
+      ServerMethod(message);
+    }
+    // a is how many milliseconds it has been since the start of the program
+  }
+  catch(Exception e) {
+  }
+  if (a-b1 >= 3000) {  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
     col_main = r;
-   if(a-b2 >= 3000){ //conferencedoor
-    confdoor = false;
-    col_conference = r;
-   }
-   if(a-b3 >= 3000){ //bathroom2
-    bathroomdoor2 = false;
-    col_bathroom_2 = r;
-    
-   }
-   if(a-b4 >= 3000){ //bathroom1
-    bathroomdoor1 = false;
-    col_bathroom_1 = r;
-   }
-   if(a-b5 >= 3000){ //ceo office
-    bigofficedoor = false;
-    col_big_office = r;
-   }
-   if(a-b6 >= 3000){ //office2
-    officedoor2 = false;
-    col_office_2 = r;
-   }
-   if(a-b7 >= 3000){ //office1
-    officedoor1 = false;
-    col_office_1 = r;
-   }
-   if(a-b8>= 3000){ //kitchen
-    kitchendoor = false;
-    col_kitchen = r;
-   }
-
+    if (a-b2 >= 3000) { //conferencedoor
+      confdoor = false;
+      col_conference = r;
+    }
+    if (a-b3 >= 3000) { //bathroom2
+      bathroomdoor2 = false;
+      col_bathroom_2 = r;
+    }
+    if (a-b4 >= 3000) { //bathroom1
+      bathroomdoor1 = false;
+      col_bathroom_1 = r;
+    }
+    if (a-b5 >= 3000) { //ceo office
+      bigofficedoor = false;
+      col_big_office = r;
+    }
+    if (a-b6 >= 3000) { //office2
+      officedoor2 = false;
+      col_office_2 = r;
+    }
+    if (a-b7 >= 3000) { //office1
+      officedoor1 = false;
+      col_office_1 = r;
+    }
+    if (a-b8>= 3000) { //kitchen
+      kitchendoor = false;
+      col_kitchen = r;
+    }
   }
-  
+
   background(bg);
   strokeWeight(6);
   stroke(col_main);
   line(150, 168, 336, 168);    // main entrance line
   stroke(col_kitchen);
-  line(68,652,172,652);        // kitchen line
+  line(68, 652, 172, 652);        // kitchen line
   stroke(col_office_1);
   line(316, 652, 416, 652);    // office 1 line
   stroke(col_office_2);
@@ -162,50 +148,36 @@ void draw(){
   line(1050, 348, 1050, 453);  // bathroom 2 line
   stroke(col_conference);
   line(774, 305, 938, 305);    // conference room line
-  
-  
-  if(maindoor){ //if the main door has been clicked, the color of the door will turn green
-   col_main = g;
+
+
+  if (maindoor) { //if the main door has been clicked, the color of the door will turn green
+    col_main = g;
   }
-  if(kitchendoor){
+  if (kitchendoor) {
     col_kitchen = g;
   }
-  
-  if(officedoor1){
+
+  if (officedoor1) {
     col_office_1 = g;
   }
 
-  if(officedoor2){
+  if (officedoor2) {
     col_office_2 = g;
   }
- 
-  if(bigofficedoor){
+
+  if (bigofficedoor) {
     col_big_office = g;
   }
- 
-  if(bathroomdoor1){
+
+  if (bathroomdoor1) {
     col_bathroom_1 = g;
   }
- 
-  if(bathroomdoor2){
+
+  if (bathroomdoor2) {
     col_bathroom_2 = g;
   }
- 
-  if(confdoor){
+
+  if (confdoor) {
     col_conference = g;
   }
-
-  
-
-
-
-
-      
-
-    
-   }
-
-
-    
-
-  
+}
