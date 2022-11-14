@@ -1,4 +1,4 @@
-import java.io.FileWriter; //<>// //<>//
+import java.io.FileWriter; //<>//
 import java.net.Socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -69,17 +69,10 @@ void setup(){
   bathroomdoor2 = false;
   confdoor = false;
   temp = "temp";
-  message = "EMPLOYEE,2,true,''";
-//androidInfo("EMPLOYEE", "2", true, ""); //EXAMPLE ONLY***
-//String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"}; //<>//
-//String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
-//try ( FileOutputStream fos = new FileOutputStream(dir); 
-//      OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8); 
-// CSVWriter writer = new CSVWriter(osw)){ //<>//
-//   writer.writeNext(head, true);
-//   }catch(Exception e){
-//        print(e);
-//      }
+  message = "message";
+//  message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
+
+ //<>//
   
 
 
@@ -93,33 +86,35 @@ void setup(){
 
 
 void draw(){
-
+ a = millis();//a - b# = how much time has passed since a certain door has been clicked
+  DataOutputStream dataOutputStream = null;
+ DataInputStream dataInputStream = null;
    try(ServerSocket serverSocket = new ServerSocket(4000)){
-       DataOutputStream dataOutputStream = null;
-      DataInputStream dataInputStream = null;
-            System.out.println("listening to port:4000");
-         //   Socket clientSocket = serverSocket.accept();
-        //    System.out.println(clientSocket+" connected\n");
-        //    dataInputStream = new DataInputStream(clientSocket.getInputStream());
-        //   dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+      
+          System.out.println("listening to port:4000");
+          Socket clientSocket = serverSocket.accept(); //need to comment out to try example
+          System.out.println(clientSocket+" connected\n"); //need to comment out to try example
+          dataInputStream = new DataInputStream(clientSocket.getInputStream()); //need to comment out to try example
+         dataOutputStream = new DataOutputStream(clientSocket.getOutputStream()); //need to comment out to try example
                  
-                while(true){
-               // temp = message;
-              //  message = dataInputStream.readUTF();
+       
+             temp = message; //need to comment out to try example
+             message = dataInputStream.readUTF(); //need to comment out to try example
                 if(!(temp.equals(message))){
                 System.out.println(message);
                 ServerMethod(message);
                 }
                 // a is how many milliseconds it has been since the start of the program
-  a = millis();//a - b# = how much time has passed since a certain door has been clicked
+   }catch(Exception e){
+   }
   if(a-b1 >= 3000){  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
     col_main = r;
    if(a-b2 >= 3000){ //conferencedoor
     confdoor = false;
-    col_conference = r; //<>//
+    col_conference = r;
    }
-   if(a-b3 >= 9000000){ //bathroom2
+   if(a-b3 >= 3000){ //bathroom2
     bathroomdoor2 = false;
     col_bathroom_2 = r;
     
@@ -203,13 +198,11 @@ void draw(){
 
 
 
-                }
+      
 
-            
-        } catch (Exception e){
-            System.out.println(e.toString());
-        }
+    
    }
+
 
     
 

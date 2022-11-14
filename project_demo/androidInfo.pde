@@ -1,20 +1,3 @@
-//import com.opencsv.CSVWriter;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.io.OutputStreamWriter;
-//import java.io.FileWriter;
-//import java.net.Socket;
-//import java.io.DataInputStream;
-//import java.io.DataOutputStream;
-//import java.net.ServerSocket;
-//import com.opencsv.CSVWriter;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.io.OutputStreamWriter;
-//import java.nio.charset.StandardCharsets;
-//import java.util.ArrayList;
-//import java.util.List;
-
 public void androidInfo(String RN, String DTA, boolean a, String t){
   Door door = new Door(RN, DTA, a, t);
   int d = day();    // Values from 1 - 31
@@ -128,6 +111,7 @@ public void androidInfo(String RN, String DTA, boolean a, String t){
      String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
      String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"};
      File tempFile = new File(dir);
+    // temp = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
       Boolean check = tempFile.exists();
       String[] dis = {RN, DTA, String.valueOf(a), t};
       try(CSVWriter writer = new CSVWriter(new FileWriter(dir, true))){
@@ -151,7 +135,7 @@ public void androidInfo(String RN, String DTA, boolean a, String t){
 }
 
     
-    //<>// //<>// //<>//
+   
                     
         
 
