@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.Ndef;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -21,40 +24,49 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.os.StrictMode;
 import java.io.UnsupportedEncodingException;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     //
+    Tag detectedTag;
+    TextView txtType,txtSize,txtWrite,txtRead;
     NfcAdapter nfcAdapter;
+    IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
-    IntentFilter writingTagFilters[];
 
     //
-    Tag myTag;
     Context context;
     TextView nfc_contents;
     Button testButton;
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
-    String AccessLevelString, stringNFCContent;
-    int intAccessLevel, intNFCContent;
+    String roomString, stringNFCContent, finalData, accessAttemptInfo;
+    int intRoom, intNFCContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         //textview "textViewAccess"
         TextView textViewAccess = findViewById(R.id.textViewAccess);
 
         //ArrayAdapter to set spinners "SpinnerCompanyRolesAccess" and "spinnerEmulateNFCCard" to values from string.xml "companyroles"
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.companyroles, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rooms, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //Spinner "spinnerCompanyRolesAccess"
-        Spinner spinnerCompanyRoleAccess = findViewById(R.id.spinnerCompanyRoleAccess);
-        spinnerCompanyRoleAccess.setAdapter(adapter);
+        Spinner spinnerRoomAccess = findViewById(R.id.spinnerRoomAccess);
+        spinnerRoomAccess.setAdapter(adapter);
 
         //
         nfc_contents = findViewById(R.id.nfc_contents);
@@ -66,19 +78,31 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //spinner value chosen for "access level" stored to string and then integer variable
-                AccessLevelString = spinnerCompanyRoleAccess.getSelectedItem().toString();
-                switch (AccessLevelString) {
-                    case "CONFERENCE":
-                        intAccessLevel = 0;
+                roomString = spinnerRoomAccess.getSelectedItem().toString();
+                switch (roomString) {
+                    case "FRONT DOOR":
+                        intRoom = 0;
                         break;
-                    case "GUEST":
-                        intAccessLevel = 1;
+                    case "CONFERENCE ROOM":
+                        intRoom = 1;
                         break;
-                    case "EMPLOYEE":
-                        intAccessLevel = 2;
+                    case "BATHROOM 1":
+                        intRoom = 2;
                         break;
-                    case "CEO":
-                        intAccessLevel = 3;
+                    case "BATHROOM 2":
+                        intRoom = 3;
+                        break;
+                    case "CEO OFFICE":
+                        intRoom = 4;
+                        break;
+                    case "OFFICE 2":
+                        intRoom = 5;
+                        break;
+                    case "OFFICE 1":
+                        intRoom = 6;
+                        break;
+                    case "KITCHEN":
+                        intRoom = 7;
                         break;
                 }
 
@@ -100,74 +124,112 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
-                if (intNFCContent != 0 && intAccessLevel == 0) {
-                    accessDenied(textViewAccess);
-                }
-                else if (intNFCContent < intAccessLevel) {
-                    accessDenied(textViewAccess);
-                }
-                else {
-                    accessGranted(textViewAccess);
+                switch (intNFCContent) {
+                    case 0:
+                        if (intRoom ==  1) {
+                            accessGranted(textViewAccess);
+                            collectData(stringNFCContent, intRoom, true);
+                        }
+                        else {
+                            accessDenied(textViewAccess);
+                            collectData(stringNFCContent, intRoom, false);
+                        }
+                        break;
+
+                    case 1:
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3) {
+                            accessGranted(textViewAccess);
+                            collectData(stringNFCContent, intRoom, true);
+                        }
+                        else {
+                            accessDenied(textViewAccess);
+                            collectData(stringNFCContent, intRoom, false);
+                        }
+                        break;
+
+                    case 2:
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7) {
+                            accessGranted(textViewAccess);
+                            collectData(stringNFCContent, intRoom, true);
+                        }
+                        else {
+                            accessDenied(textViewAccess);
+                            collectData(stringNFCContent, intRoom, false);
+                        }
+                        break;
+
+                    case 3:
+                        if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7) {
+                            accessGranted(textViewAccess);
+                            collectData(stringNFCContent, intRoom, true);
+                        }
+                        else {
+                            accessDenied(textViewAccess);
+                            collectData(stringNFCContent, intRoom, false);
+                        }
+                        break;
                 }
             }
         });
 
         //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(nfcAdapter == null){
-            Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
-        //TODO: Determine if better solution for automatically detecting NFC card is available other then idle intent
-        readFromIntent(getIntent());
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(this,getClass()).
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-        writingTagFilters = new IntentFilter[] { tagDetected };
+        IntentFilter filter2     = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected,filter2};
     }
 
-    private void readFromIntent(Intent intent) {
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage[] msgs = null;
-            if (rawMsgs != null) {
-                msgs = new NdefMessage[rawMsgs.length];
-                for (int i = 0; i < rawMsgs.length; i++) {
-                    msgs[i] = (NdefMessage) rawMsgs[i];
-                }
-            }
-            buildTagViews(msgs);
-        }
-    }
-
-    private void buildTagViews(NdefMessage[] msgs) {
-        if (msgs == null || msgs.length == 0) return;
-        stringNFCContent = "";
-        byte[] payload = msgs[0].getRecords()[0].getPayload();
-        String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
-        int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
-
-        try {
-            // Get the Text
-            stringNFCContent = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
-        } catch (UnsupportedEncodingException e) {
-            Log.e("UnsupportedEncoding", e.toString());
-        }
-
-        nfc_contents.setText("Current NFC Content: " + stringNFCContent);
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        readFromIntent(intent);
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+            detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            readFromTag(getIntent());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
+    }
+
+
+    public void readFromTag(Intent intent){
+
+        Ndef ndef = Ndef.get(detectedTag);
+
+        try{
+            ndef.connect();
+
+            Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (messages != null) {
+                NdefMessage[] ndefMessages = new NdefMessage[messages.length];
+                for (int i = 0; i < messages.length; i++) {
+                    ndefMessages[i] = (NdefMessage) messages[i];
+                }
+                NdefRecord record = ndefMessages[0].getRecords()[0];
+
+                byte[] payload = record.getPayload();
+                stringNFCContent = new String(payload);
+                stringNFCContent = stringNFCContent.substring(3);
+                nfc_contents.setText("Current NFC Content: " + stringNFCContent);
+
+                ndef.close();
+
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
+            System.out.println(e);
         }
     }
 
@@ -227,5 +289,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         textViewAccess.startAnimation(blink);
+    }
+
+    private void collectData(String stringNFCContent, int intRoom, boolean access) {
+        finalData = (stringNFCContent + "," + intRoom + "," + access);
+        sendData();
+    }
+
+    private void sendData() {
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                //TODO your background code
+                DataOutputStream dataOutputStream = null;
+                try(Socket socket = new Socket("10.0.0.14",4000)){
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+                    while(true) {
+                        if(accessAttemptInfo != finalData) {
+                            dataOutputStream.writeUTF(finalData);
+                        }
+                        accessAttemptInfo = finalData;
+                    }
+
+                }   catch (Exception e){
+                    System.out.println(e.toString());
+                }
+            }
+        });
     }
 }
