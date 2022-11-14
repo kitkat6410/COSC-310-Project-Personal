@@ -30,22 +30,21 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    //inti
+    //initialize needed variables for NFC reading functionality, including tag data, NFCAdapter present on device, intent filter in AndroidManfiest.xml, and intent.
     Tag detectedTag;
     NfcAdapter nfcAdapter;
     IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
 
-    //
+    //Initialize needed objects from activity_main.xml to be modified while program is running in other functions
     Context context;
     TextView nfc_contents;
     Button testButton;
 
-    //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
+    //String and Int Variables to determine company role on NFC card, aswell as room within office being entered
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,20 +57,24 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rooms, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        //Spinner "spinnerCompanyRolesAccess"
+        //Spinner "spinnerRoomAccess"
         Spinner spinnerRoomAccess = findViewById(R.id.spinnerRoomAccess);
         spinnerRoomAccess.setAdapter(adapter);
 
-        //
+        //Textview "nfc_contents"
         nfc_contents = findViewById(R.id.nfc_contents);
+
+        //Button "testButton"
         testButton = findViewById(R.id.testButton);
+
         context = this;
 
+        //When button "testButton" is pressed
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //spinner value chosen for "access level" stored to string and then integer variable
+                //spinner value chosen for room stored to string and then integer variable
                 roomString = spinnerRoomAccess.getSelectedItem().toString();
                 switch (roomString) {
                     case "FRONT DOOR":
@@ -116,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-                //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
+                //if NFC cards stored company role is allowed to access requested room, goto function "access granted", other wise goto "access denied".
+                //function collectData will be called regardless of failed or successful access attempt, to be stored in logs within processing partner app
                 switch (intNFCContent) {
                     case 0:
                         if (intRoom ==  1) {
@@ -165,9 +169,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //set NFCAdapter to use, to devices NFCAdapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(this,getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
+        //TODO: figure out what the fuck this does
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected,filter2};
