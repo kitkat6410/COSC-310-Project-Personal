@@ -1,4 +1,4 @@
- //<>// //<>// //<>// //<>//
+//<>// //<>// //<>// //<>// //<>// //<>//
 import java.io.FileWriter;
 import java.net.Socket;
 import java.io.DataInputStream;
@@ -67,10 +67,11 @@ void setup() {
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
-
-  //ServerMethod("CONFERENCE,1,true"); //<>//
-  ServerMethod("FIRE");
-//ServerMethod("INTRUDER");
+  mes = "mes";
+  //** TEST CODE **
+  // ServerMethod("CONFERENCE,1,true");
+  // ServerMethod("FIRE");
+  // ServerMethod("INTRUDER");
 }
 
 
@@ -80,42 +81,42 @@ void draw() {
 
   thread("server");
 
-  a = millis();//a - b# = how much time has passed since a certain door has been clicked //<>//
-  
-  if((!(mes.equals("FIRE")))&&(!(mes.equals("INTRUDER")))) {
+  a = millis();//a - b# = how much time has passed since a certain door has been clicked
 
-  if (a-b1 >= 3000) {  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
-    maindoor = false;
-    col_main = r;
-    if (a-b2 >= 3000) { //conferencedoor
-      confdoor = false;
-      col_conference = r;
+  if ((!(mes.equals("FIRE")))&&(!(mes.equals("INTRUDER")))) { //this chunk of code should not run during special cases FIRE and INTRUDER
+
+    if (a-b1 >= 3000) {  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
+      maindoor = false;
+      col_main = r;
+      if (a-b2 >= 3000) { //conferencedoor
+        confdoor = false;
+        col_conference = r;
+      }
+      if (a-b3 >= 3000) { //bathroom1
+        bathroomdoor1 = false;
+        col_bathroom_1 = r;
+      }
+      if (a-b4 >= 3000) { //bathroom2
+        bathroomdoor2 = false;
+        col_bathroom_2 = r;
+      }
+      if (a-b5 >= 3000) { //ceo office
+        bigofficedoor = false;
+        col_big_office = r;
+      }
+      if (a-b6 >= 3000) { //office2
+        officedoor1 = false;
+        col_office_1 = r;
+      }
+      if (a-b7 >= 3000) { //office1
+        officedoor2 = false;
+        col_office_2 = r;
+      }
+      if (a-b8>= 3000) { //kitchen
+        kitchendoor = false;
+        col_kitchen = r;
+      }
     }
-    if (a-b3 >= 3000) { //bathroom1
-      bathroomdoor1 = false;
-      col_bathroom_1 = r;
-    }
-    if (a-b4 >= 3000) { //bathroom2
-      bathroomdoor2 = false;
-      col_bathroom_2 = r;
-    }
-    if (a-b5 >= 3000) { //ceo office
-      bigofficedoor = false;
-      col_big_office = r;
-    }
-    if (a-b6 >= 3000) { //office2
-      officedoor1 = false;
-      col_office_1 = r;
-    }
-    if (a-b7 >= 3000) { //office1
-      officedoor2 = false;
-      col_office_2 = r;
-    }
-    if (a-b8>= 3000) { //kitchen
-      kitchendoor = false;
-      col_kitchen = r;
-    }
-  }
   }
 
   background(bg);

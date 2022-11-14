@@ -1,11 +1,11 @@
-public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
+public void androidInfo(String RN, String DTA, boolean a, String t) { //<>// //<>//
   Door door = new Door(RN, DTA, a, t);
   int d = day();    // Values from 1 - 31
   int m = month();  // Values from 1 - 12
   int y = year();   // 2003, 2004, 2005, etc.
-  int h = hour();
-  int min = minute();
-  int sec = second();
+  int h = hour();   // Values in military time
+  int min = minute(); // Values from 00 - 59
+  int sec = second(); //Vales from 00 - 59
 
   String month = "";
   switch(m) {
@@ -52,60 +52,60 @@ public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
 
 
 
-if((!(mes.equals("FIRE")))&&(!(mes.equals("INTRUDER")))){
-  int doornum = Integer.parseInt(DTA);
-  boolean tmp = door.getAccess();
-  switch(doornum) {
-  case 0: //maindoor
-    if (tmp) {
-      maindoor = true;
+  if ((!(mes.equals("FIRE")))&&(!(mes.equals("INTRUDER")))) { //this chunk of code should not run during special cases FIRE and INTRUDER
+    int doornum = Integer.parseInt(DTA);
+    boolean tmp = door.getAccess();
+    switch(doornum) {
+    case 0: //maindoor
+      if (tmp) {
+        maindoor = true;
+      }
+      b1 = millis();
+      break;
+    case 1: //confdoor
+      if (tmp) {
+        confdoor = true;
+      }
+      b2 = millis();
+      break;
+    case 2: //bathroomdoor1
+      if (tmp) {
+        bathroomdoor1 = true;
+      }
+      b3 = millis();
+      break;
+    case 3: //bathroomdoor2
+      if (tmp) {
+        bathroomdoor2 = true;
+      }
+      b4 = millis();
+      break;
+    case 4: //bigofficedoor
+      if (tmp) {
+        bigofficedoor = true;
+      }
+      b5 = millis();
+      break;
+    case 5: //officedoor2
+      if (tmp) {
+        officedoor1 = true;
+      }
+      b6 = millis();
+      break;
+    case 6: //officedoor1
+      if (tmp) {
+        officedoor2 = true;
+      }
+      b7 = millis();
+      break;
+    case 7: //kitchendoor
+      if (tmp) {
+        kitchendoor = true;
+      }
+      b8 = millis();
+      break;
     }
-    b1 = millis();
-    break;
-  case 1: //confdoor
-    if (tmp) {
-      confdoor = true;
-    }
-    b2 = millis();
-    break;
-  case 2: //bathroomdoor1
-    if (tmp) {
-      bathroomdoor1 = true;
-    }
-    b3 = millis();
-    break;
-  case 3: //bathroomdoor2
-    if (tmp) {
-      bathroomdoor2 = true;
-    }
-    b4 = millis();
-    break;
-  case 4: //bigofficedoor
-    if (tmp) {
-      bigofficedoor = true;
-    }
-    b5 = millis();
-    break;
-  case 5: //officedoor2
-    if (tmp) {
-      officedoor1 = true;
-    }
-    b6 = millis();
-    break;
-  case 6: //officedoor1
-    if (tmp) {
-      officedoor2 = true;
-    }
-    b7 = millis();
-    break;
-  case 7: //kitchendoor
-    if (tmp) {
-      kitchendoor = true;
-    }
-    b8 = millis();
-    break;
   }
-}
   //"C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
   String dir = "./database.csv";
   String[] head = {"RoleName", "DoorToAccess", "AccessStatus", "DATETIME"};
