@@ -2,6 +2,7 @@ package com.example.nfcscanner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,6 @@ import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -24,18 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.os.StrictMode;
-import java.io.UnsupportedEncodingException;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
-    //
+    //inti
     Tag detectedTag;
-    TextView txtType,txtSize,txtWrite,txtRead;
     NfcAdapter nfcAdapter;
     IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
@@ -49,13 +45,11 @@ public class MainActivity extends AppCompatActivity {
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 
         //textview "textViewAccess"
         TextView textViewAccess = findViewById(R.id.textViewAccess);
@@ -70,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         //
         nfc_contents = findViewById(R.id.nfc_contents);
-        testButton =  findViewById(R.id.testButton);
+        testButton = findViewById(R.id.testButton);
         context = this;
 
         testButton.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //spinner value chosen for "emulated NFC card" stored to string and then integer variable
-
                 switch (stringNFCContent) {
                     case "CONFERENCE":
                         intNFCContent = 0;
@@ -172,24 +165,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-
-        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-                new Intent(this,getClass()).
-                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(this,getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        IntentFilter filter2     = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected,filter2};
     }
 
     protected void onNewIntent(Intent intent) {
+
         super.onNewIntent(intent);
         setIntent(intent);
         if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
             readFromTag(getIntent());
         }
     }
@@ -202,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SetTextI18n")
     public void readFromTag(Intent intent){
 
         Ndef ndef = Ndef.get(detectedTag);
@@ -301,20 +291,19 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                //TODO your background code
-                DataOutputStream dataOutputStream = null;
+                DataOutputStream dataOutputStream;
                 try(Socket socket = new Socket("10.0.0.14",4000)){
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
                     while(true) {
-                        if(accessAttemptInfo != finalData) {
+                        if(!accessAttemptInfo.equals(finalData)) {
                             dataOutputStream.writeUTF(finalData);
                         }
                         accessAttemptInfo = finalData;
                     }
 
                 }   catch (Exception e){
-                    System.out.println(e.toString());
+                    System.out.println(e);
                 }
             }
         });
