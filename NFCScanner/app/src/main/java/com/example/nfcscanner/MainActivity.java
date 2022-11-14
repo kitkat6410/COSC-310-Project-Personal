@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Button testButton;
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
-    String roomString, stringNFCContent;
+    String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
 
     @Override
@@ -126,44 +127,44 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         if (intRoom ==  1) {
                             accessGranted(textViewAccess);
-                            sendData(stringNFCContent, intRoom, true);
+                            collectData(stringNFCContent, intRoom, true);
                         }
                         else {
                             accessDenied(textViewAccess);
-                            sendData(stringNFCContent, intRoom, false);
+                            collectData(stringNFCContent, intRoom, false);
                         }
                         break;
 
                     case 1:
                         if (intRoom == 0 || intRoom == 2 || intRoom == 3) {
                             accessGranted(textViewAccess);
-                            sendData(stringNFCContent, intRoom, true);
+                            collectData(stringNFCContent, intRoom, true);
                         }
                         else {
                             accessDenied(textViewAccess);
-                            sendData(stringNFCContent, intRoom, false);
+                            collectData(stringNFCContent, intRoom, false);
                         }
                         break;
 
                     case 2:
                         if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7) {
                             accessGranted(textViewAccess);
-                            sendData(stringNFCContent, intRoom, true);
+                            collectData(stringNFCContent, intRoom, true);
                         }
                         else {
                             accessDenied(textViewAccess);
-                            sendData(stringNFCContent, intRoom, false);
+                            collectData(stringNFCContent, intRoom, false);
                         }
                         break;
 
                     case 3:
                         if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7) {
                             accessGranted(textViewAccess);
-                            sendData(stringNFCContent, intRoom, true);
+                            collectData(stringNFCContent, intRoom, true);
                         }
                         else {
                             accessDenied(textViewAccess);
-                            sendData(stringNFCContent, intRoom, false);
+                            collectData(stringNFCContent, intRoom, false);
                         }
                         break;
                 }
@@ -287,17 +288,32 @@ public class MainActivity extends AppCompatActivity {
         textViewAccess.startAnimation(blink);
     }
 
-    private void sendData(String stringNFCContent, int intRoom, boolean access) {
-        DataOutputStream dataOutputStream = null;
+    private void collectData(String stringNFCContent, int intRoom, boolean access) {
+        finalData = (stringNFCContent + "," + intRoom + "," + access);
+        sendData();
+    }
 
-        try(Socket socket = new Socket("10.0.0.14",4000)){
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+    private void sendData() {
 
-                    String accessAttemptInfo = (stringNFCContent + "," + intRoom + "," + access);
-                    dataOutputStream.writeUTF(accessAttemptInfo);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                //TODO your background code
+                DataOutputStream dataOutputStream = null;
+                try(Socket socket = new Socket("10.0.0.14",4000)){
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
-        }   catch (Exception e){
-            System.out.println(e.toString());
-        }
+                    while(true) {
+                        if(accessAttemptInfo != finalData) {
+                            dataOutputStream.writeUTF(finalData);
+                        }
+                        accessAttemptInfo = finalData;
+                    }
+
+                }   catch (Exception e){
+                    System.out.println(e.toString());
+                }
+            }
+        });
     }
 }
