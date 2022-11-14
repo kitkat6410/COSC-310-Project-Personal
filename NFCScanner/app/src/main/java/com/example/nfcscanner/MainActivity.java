@@ -2,18 +2,20 @@ package com.example.nfcscanner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -22,29 +24,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.os.StrictMode;
-import java.io.UnsupportedEncodingException;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
-    //
+    //initialize needed variables for NFC reading functionality, including tag data, NFCAdapter present on device, intent filter in AndroidManfiest.xml, and intent.
+    Tag detectedTag;
     NfcAdapter nfcAdapter;
+    IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
-    IntentFilter writingTagFilters[];
 
-    //
-    Tag myTag;
+    //Initialize needed objects from activity_main.xml to be modified while program is running in other functions
     Context context;
     TextView nfc_contents;
     Button testButton;
 
-    //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
+    //String and Int Variables to determine company role on NFC card, aswell as room within office being entered
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
 
@@ -53,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         //textview "textViewAccess"
         TextView textViewAccess = findViewById(R.id.textViewAccess);
 
@@ -63,20 +57,24 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.rooms, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        //Spinner "spinnerCompanyRolesAccess"
+        //Spinner "spinnerRoomAccess"
         Spinner spinnerRoomAccess = findViewById(R.id.spinnerRoomAccess);
         spinnerRoomAccess.setAdapter(adapter);
 
-        //
+        //Textview "nfc_contents"
         nfc_contents = findViewById(R.id.nfc_contents);
-        testButton =  findViewById(R.id.testButton);
+
+        //Button "testButton"
+        testButton = findViewById(R.id.testButton);
+
         context = this;
 
+        //When button "testButton" is pressed
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //spinner value chosen for "access level" stored to string and then integer variable
+                //spinner value chosen for room stored to string and then integer variable
                 roomString = spinnerRoomAccess.getSelectedItem().toString();
                 switch (roomString) {
                     case "FRONT DOOR":
@@ -106,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //spinner value chosen for "emulated NFC card" stored to string and then integer variable
-
                 switch (stringNFCContent) {
                     case "CONFERENCE":
                         intNFCContent = 0;
@@ -122,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-                //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
+                //if NFC cards stored company role is allowed to access requested room, goto function "access granted", other wise goto "access denied".
+                //function collectData will be called regardless of failed or successful access attempt, to be stored in logs within processing partner app
                 switch (intNFCContent) {
                     case 0:
                         if (intRoom ==  1) {
@@ -171,62 +169,63 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
+        //set NFCAdapter to use, to devices NFCAdapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(nfcAdapter == null){
-            Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(this,getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-        //TODO: Determine if better solution for automatically detecting NFC card is available other then idle intent
-        readFromIntent(getIntent());
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        //TODO: figure out what the fuck this does
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-        writingTagFilters = new IntentFilter[] { tagDetected };
+        IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected,filter2};
     }
 
-    private void readFromIntent(Intent intent) {
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage[] msgs = null;
-            if (rawMsgs != null) {
-                msgs = new NdefMessage[rawMsgs.length];
-                for (int i = 0; i < rawMsgs.length; i++) {
-                    msgs[i] = (NdefMessage) rawMsgs[i];
-                }
-            }
-            buildTagViews(msgs);
+    protected void onNewIntent(Intent intent) {
+
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+            detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            readFromTag(getIntent());
         }
-    }
-
-    private void buildTagViews(NdefMessage[] msgs) {
-        if (msgs == null || msgs.length == 0) return;
-        stringNFCContent = "";
-        byte[] payload = msgs[0].getRecords()[0].getPayload();
-        String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
-        int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
-
-        try {
-            // Get the Text
-            stringNFCContent = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
-        } catch (UnsupportedEncodingException e) {
-            Log.e("UnsupportedEncoding", e.toString());
-        }
-
-        nfc_contents.setText("Current NFC Content: " + stringNFCContent);
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        readFromIntent(intent);
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+    protected void onResume() {
+
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    public void readFromTag(Intent intent){
+
+        Ndef ndef = Ndef.get(detectedTag);
+
+        try{
+            ndef.connect();
+
+            Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (messages != null) {
+                NdefMessage[] ndefMessages = new NdefMessage[messages.length];
+                for (int i = 0; i < messages.length; i++) {
+                    ndefMessages[i] = (NdefMessage) messages[i];
+                }
+                NdefRecord record = ndefMessages[0].getRecords()[0];
+
+                byte[] payload = record.getPayload();
+                stringNFCContent = new String(payload);
+                stringNFCContent = stringNFCContent.substring(3);
+                nfc_contents.setText("Current NFC Content: " + stringNFCContent);
+
+                ndef.close();
+
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
+            System.out.println(e);
         }
     }
 
@@ -298,20 +297,19 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                //TODO your background code
-                DataOutputStream dataOutputStream = null;
+                DataOutputStream dataOutputStream;
                 try(Socket socket = new Socket("10.0.0.14",4000)){
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
                     while(true) {
-                        if(accessAttemptInfo != finalData) {
+                        if(!accessAttemptInfo.equals(finalData)) {
                             dataOutputStream.writeUTF(finalData);
                         }
                         accessAttemptInfo = finalData;
                     }
 
                 }   catch (Exception e){
-                    System.out.println(e.toString());
+                    System.out.println(e);
                 }
             }
         });
