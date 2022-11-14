@@ -71,10 +71,10 @@ void setup(){
 
 void draw(){
 
-   try(ServerSocket serverSocket = new ServerSocket(5000)){ //<>//
+   try(ServerSocket serverSocket = new ServerSocket(4000)){ //<>//
        DataOutputStream dataOutputStream = null;
       DataInputStream dataInputStream = null;
-            System.out.println("listening to port:5000");
+            System.out.println("listening to port:4000");
             Socket clientSocket = serverSocket.accept();
             System.out.println(clientSocket+" connected\n");
             dataInputStream = new DataInputStream(clientSocket.getInputStream());
