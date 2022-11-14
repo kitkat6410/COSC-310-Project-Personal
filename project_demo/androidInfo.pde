@@ -52,7 +52,7 @@ public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
 
 
 
-
+if((!(mes.equals("FIRE")))&&(!(mes.equals("INTRUDER")))){
   int doornum = Integer.parseInt(DTA);
   boolean tmp = door.getAccess();
   switch(doornum) {
@@ -105,6 +105,7 @@ public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
     b8 = millis();
     break;
   }
+}
   //"C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
   String dir = "./database.csv";
   String[] head = {"RoleName", "DoorToAccess", "AccessStatus", "DATETIME"};

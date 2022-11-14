@@ -69,8 +69,8 @@ void setup() {
   confdoor = false;
 
   //ServerMethod("CONFERENCE,1,true"); //<>//
- // ServerMethod("FIRE");
-ServerMethod("INTRUDER");
+  ServerMethod("FIRE");
+//ServerMethod("INTRUDER");
 }
 
 

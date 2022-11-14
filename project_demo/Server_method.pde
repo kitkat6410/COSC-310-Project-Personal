@@ -1,4 +1,3 @@
-
 public void ServerMethod(String message) {
   mes = message;
   if(message=="FIRE"){
@@ -10,6 +9,7 @@ public void ServerMethod(String message) {
  col_bathroom_1 = g;
  col_bathroom_2 = g;
  col_conference =g;
+ androidInfo("FIRE", "", false, "");
     
   }
   else if(message == "INTRUDER"){
@@ -21,6 +21,7 @@ public void ServerMethod(String message) {
  col_bathroom_1 = y;
  col_bathroom_2 = y;
  col_conference =y;
+ androidInfo("INTRUDER", "", false, "");
     
   }
   else{
