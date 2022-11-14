@@ -11,6 +11,7 @@ import java.util.List;
 PImage bg;
 color g;
 color r;
+color y;
 color col_main;
 color col_kitchen;
 color col_office_1;
@@ -36,6 +37,7 @@ double b5;
 double b6;
 double b7;
 double b8;
+String mes;
 
 
 
@@ -48,6 +50,7 @@ void setup() {
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
   r = color(#FF0000);
+  y = color(#FFBF00);
   col_main = r;
   col_kitchen = r;
   col_office_1 = r;
@@ -64,7 +67,10 @@ void setup() {
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
-  ServerMethod("CONFERENCE,1,true"); //<>//
+
+  //ServerMethod("CONFERENCE,1,true"); //<>//
+ // ServerMethod("FIRE");
+ServerMethod("INTRUDER");
 }
 
 
@@ -74,7 +80,9 @@ void draw() {
 
   thread("server");
 
-  a = millis();//a - b# = how much time has passed since a certain door has been clicked
+  a = millis();//a - b# = how much time has passed since a certain door has been clicked //<>//
+  
+  if((!(mes.equals("FIRE")))&&(!(mes.equals("INTRUDER")))) {
 
   if (a-b1 >= 3000) {  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
@@ -108,6 +116,7 @@ void draw() {
       col_kitchen = r;
     }
   }
+  }
 
   background(bg);
   strokeWeight(6);
@@ -129,7 +138,7 @@ void draw() {
   line(774, 305, 938, 305);    // conference room line
 
 
-  if (maindoor) { //if the main door has been clicked, the color of the door will turn green
+  if (maindoor) { //if the main door access has been authorized, the color of the door will turn green
     col_main = g;
   }
   if (kitchendoor) {
