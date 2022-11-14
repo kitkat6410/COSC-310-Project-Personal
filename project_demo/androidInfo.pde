@@ -1,7 +1,19 @@
-import com.opencsv.CSVWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+//import com.opencsv.CSVWriter;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.OutputStreamWriter;
+//import java.io.FileWriter;
+//import java.net.Socket;
+//import java.io.DataInputStream;
+//import java.io.DataOutputStream;
+//import java.net.ServerSocket;
+//import com.opencsv.CSVWriter;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.OutputStreamWriter;
+//import java.nio.charset.StandardCharsets;
+//import java.util.ArrayList;
+//import java.util.List;
 
 public void androidInfo(String RN, String DTA, boolean a, String t){
   Door door = new Door(RN, DTA, a, t);
@@ -78,13 +90,13 @@ public void androidInfo(String RN, String DTA, boolean a, String t){
     break;
     case 2: //bathroomdoor1
      if(tmp){
-     bathroomdoor1 = true;     
+     bathroomdoor2 = true;     
      }
     b3 = millis();
     break;
     case 3: //bathroomdoor2
      if(tmp){
-      officedoor2 = true;         
+      officedoor1 = true;         
     }   
     b4 = millis();
     break;
@@ -112,47 +124,36 @@ public void androidInfo(String RN, String DTA, boolean a, String t){
      }
     b8 = millis();
     break;
-  
-  
   }
-  //C:\Users\quirk\Desktop\COSC-310-Project\project_demo
-   String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/"; //<>//
-     boolean r = false;
-        File folder = new File(dir); //<>//
-        File[] k = folder.listFiles(); //k is null f**k, not null but that's not generic dir
-        //FileWriter outputfile = new FileWriter("data.csv");
-        for(int i = 0; i < k.length; i++){
-  
-              try{
-     
-                if(k[i].getName().equals("database.csv")) {
-                  r = true;
-                CSVWriter out = new CSVWriter(new FileWriter(k[i].getName()), ',', CSVWriter.NO_QUOTE_CHARACTER,
-                                         CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                                         CSVWriter.DEFAULT_LINE_END);
-                String[] dis = {RN, DTA, String.valueOf(a), t}; //<>//
-                out.writeNext(dis);
-                out.close();
-                }else if(!r && i == k.length-1) {
-                  File data = new File("database.csv"); //it ran why didn't it create the file //<>//
-                  try{
-                  CSVWriter out = new CSVWriter(new FileWriter(data), ',', CSVWriter.NO_QUOTE_CHARACTER,
-                                         CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                                         CSVWriter.DEFAULT_LINE_END);
-                  String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"};
-                  out.writeNext(head);
-                  String[] dis = {RN, DTA, String.valueOf(a), t};
-                  out.writeNext(dis);
-                  out.close();
+     String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
+     String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"};
+     File tempFile = new File(dir);
+      Boolean check = tempFile.exists();
+      String[] dis = {RN, DTA, String.valueOf(a), t};
+      try(CSVWriter writer = new CSVWriter(new FileWriter(dir, true))){
+        if(check){
+          writer.writeNext(dis);
+   
+               
             }
+          else{
+            List<String[]> entries = new ArrayList<>();
+            entries.add(head);
+            entries.add(dis);
+            writer.writeAll(entries);
+      }}
               catch(Exception e){
+                print(e);
               }
-                    
-        } 
 
-        }catch(Exception e){
-          
-        }
-        }
-
+  
+  
 }
+
+    
+    //<>// //<>// //<>//
+                    
+        
+
+ 
+        

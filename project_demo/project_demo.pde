@@ -1,8 +1,15 @@
-import java.io.FileWriter;
+import java.io.FileWriter; //<>// //<>//
 import java.net.Socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
+import com.opencsv.CSVWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 PImage bg;
 color g;
 color r;
@@ -34,11 +41,14 @@ double b8;
 String message;
 String temp;
 String[] fuck;
+Boolean header;
+
 
 
 
 void setup(){ 
- size(1280, 1038); //<>//
+ size(1280, 1038);
+ header = false;
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
   r = color(#FF0000);
@@ -59,18 +69,17 @@ void setup(){
   bathroomdoor2 = false;
   confdoor = false;
   temp = "temp";
-  message = "EMPLOYEE,2,true''";
-  String[] fuck = message.split(","); //<>//
- // androidInfo("EMPLOYEE", "2", true, ""); //EXAMPLE ONLY***
- // String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"};
- // String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
- // try (var fos = new FileOutputStream(fileName); 
- //            var osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
- //            var writer = new CSVWriter(osw)){
-    
- //   writer.writeNext(head);
-    
-//  }
+  message = "EMPLOYEE,2,true,''";
+//androidInfo("EMPLOYEE", "2", true, ""); //EXAMPLE ONLY***
+//String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"}; //<>//
+//String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
+//try ( FileOutputStream fos = new FileOutputStream(dir); 
+//      OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8); 
+// CSVWriter writer = new CSVWriter(osw)){ //<>//
+//   writer.writeNext(head, true);
+//   }catch(Exception e){
+//        print(e);
+//      }
   
 
 
@@ -85,7 +94,7 @@ void setup(){
 
 void draw(){
 
-   try(ServerSocket serverSocket = new ServerSocket(4000)){ //<>//
+   try(ServerSocket serverSocket = new ServerSocket(4000)){
        DataOutputStream dataOutputStream = null;
       DataInputStream dataInputStream = null;
             System.out.println("listening to port:4000");
@@ -108,16 +117,16 @@ void draw(){
     col_main = r;
    if(a-b2 >= 3000){ //conferencedoor
     confdoor = false;
-    col_conference = r;
+    col_conference = r; //<>//
    }
-   if(a-b3 >= 3000){ //bathroom1
-    bathroomdoor1 = false;
-    col_bathroom_1 = r;
+   if(a-b3 >= 9000000){ //bathroom2
+    bathroomdoor2 = false;
+    col_bathroom_2 = r;
     
    }
-   if(a-b4 >= 3000){ //bathroom2
+   if(a-b4 >= 3000){ //bathroom1
     bathroomdoor1 = false;
-    col_bathroom_2 = r;
+    col_bathroom_1 = r;
    }
    if(a-b5 >= 3000){ //ceo office
     bigofficedoor = false;

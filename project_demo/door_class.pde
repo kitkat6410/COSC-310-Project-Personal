@@ -1,4 +1,4 @@
-public class Door{ //<>//
+public class Door{
   String RoleName; //GUEST, EMPLOYEE, CEO, CONFERENCE
   String DoorToAccess;
   boolean access; //whether access was granted or denied
