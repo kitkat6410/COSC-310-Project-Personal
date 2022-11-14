@@ -71,8 +71,10 @@ void setup(){
   temp = "temp";
   message = "message";
 //  message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
+File directory =new File("./");
+print(directory.getAbsolutePath()); //<>//
 
- //<>//
+
   
 
 
@@ -91,7 +93,7 @@ void draw(){
  DataInputStream dataInputStream = null;
    try(ServerSocket serverSocket = new ServerSocket(4000)){
       
-          System.out.println("listening to port:4000");
+         // System.out.println("listening to port:4000");
           Socket clientSocket = serverSocket.accept(); //need to comment out to try example
           System.out.println(clientSocket+" connected\n"); //need to comment out to try example
           dataInputStream = new DataInputStream(clientSocket.getInputStream()); //need to comment out to try example
