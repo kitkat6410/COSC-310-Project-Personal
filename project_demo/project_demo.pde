@@ -32,6 +32,8 @@ double b6;
 double b7;
 double b8;
 String message;
+String temp;
+String[] fuck;
 
 
 
@@ -56,7 +58,19 @@ void setup(){
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
-  androidInfo("EMPLOYEE", "2", true, ""); //EXAMPLE ONLY***
+  temp = "temp";
+  message = "EMPLOYEE,2,true''";
+  String[] fuck = message.split(","); //<>//
+ // androidInfo("EMPLOYEE", "2", true, ""); //EXAMPLE ONLY***
+ // String[] head = {"RoleName","DoorToAccess","AccessStatus","DATETIME"};
+ // String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
+ // try (var fos = new FileOutputStream(fileName); 
+ //            var osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+ //            var writer = new CSVWriter(osw)){
+    
+ //   writer.writeNext(head);
+    
+//  }
   
 
 
@@ -75,25 +89,19 @@ void draw(){
        DataOutputStream dataOutputStream = null;
       DataInputStream dataInputStream = null;
             System.out.println("listening to port:4000");
-            Socket clientSocket = serverSocket.accept();
-            System.out.println(clientSocket+" connected\n");
-            dataInputStream = new DataInputStream(clientSocket.getInputStream());
-           dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-                String temp = message;
-                message = dataInputStream.readUTF();
+         //   Socket clientSocket = serverSocket.accept();
+        //    System.out.println(clientSocket+" connected\n");
+        //    dataInputStream = new DataInputStream(clientSocket.getInputStream());
+        //   dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+                 
+                while(true){
+               // temp = message;
+              //  message = dataInputStream.readUTF();
                 if(!(temp.equals(message))){
                 System.out.println(message);
                 ServerMethod(message);
                 }
-              
-            
-        } catch (Exception e){
-            System.out.println(e.toString());
-        }
-
-    
-
-  // a is how many milliseconds it has been since the start of the program
+                // a is how many milliseconds it has been since the start of the program
   a = millis();//a - b# = how much time has passed since a certain door has been clicked
   if(a-b1 >= 3000){  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
@@ -182,10 +190,18 @@ void draw(){
   }
 
   
-}
 
 
 
 
+                }
+
+            
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+   }
+
+    
 
   

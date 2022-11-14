@@ -1,3 +1,7 @@
+import com.opencsv.CSVWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 public void androidInfo(String RN, String DTA, boolean a, String t){
   Door door = new Door(RN, DTA, a, t);
@@ -112,7 +116,7 @@ public void androidInfo(String RN, String DTA, boolean a, String t){
   
   }
   //C:\Users\quirk\Desktop\COSC-310-Project\project_demo
-   String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo"; //<>//
+   String dir = "C:/Users/quirk/Desktop/COSC-310-Project/project_demo/"; //<>//
      boolean r = false;
         File folder = new File(dir); //<>//
         File[] k = folder.listFiles(); //k is null f**k, not null but that's not generic dir
