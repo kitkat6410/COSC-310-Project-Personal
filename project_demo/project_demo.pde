@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
 PImage bg;
 color g;
 color r;
@@ -70,33 +71,16 @@ void setup() {
   confdoor = false;
   temp = "temp";
   message = "message";
-  //message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
+ // message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
 }
  //<>//
 
 void draw() {
+  
+  thread("server");
+      
   a = millis();//a - b# = how much time has passed since a certain door has been clicked
-  DataOutputStream dataOutputStream = null;
-  DataInputStream dataInputStream = null;
-  try(ServerSocket serverSocket = new ServerSocket(4000)) {
-
-    System.out.println("listening to port:4000");
-    Socket clientSocket = serverSocket.accept(); //need to comment out to try example
-    System.out.println(clientSocket+" connected\n"); //need to comment out to try example
-    dataInputStream = new DataInputStream(clientSocket.getInputStream()); //need to comment out to try example
-    dataOutputStream = new DataOutputStream(clientSocket.getOutputStream()); //need to comment out to try example
-
-
-    temp = message; //need to comment out to try example
-    message = dataInputStream.readUTF(); //need to comment out to try example
-    if (!(temp.equals(message))) {
-      System.out.println(message);
-      ServerMethod(message);
-    }
-    // a is how many milliseconds it has been since the start of the program
-  }
-  catch(Exception e) {
-  }
+  
   if (a-b1 >= 3000) {  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
     col_main = r;
@@ -180,4 +164,22 @@ void draw() {
   if (confdoor) {
     col_conference = g;
   }
+}
+
+void server() {
+  DataInputStream dataInputStream = null;
+  try(ServerSocket serverSocket = new ServerSocket(4000)){
+            Socket clientSocket = serverSocket.accept();
+            System.out.println(clientSocket+" connected\n");
+            dataInputStream = new DataInputStream(clientSocket.getInputStream());
+            String message;
+            while (true) {
+                message = dataInputStream.readUTF();
+                System.out.println(message); 
+                ServerMethod(message);
+            }
+
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
 }

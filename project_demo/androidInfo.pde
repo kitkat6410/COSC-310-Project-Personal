@@ -77,7 +77,7 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
     break;
   case 3: //bathroomdoor2
     if (tmp) {
-      officedoor1 = true;
+      bathroomdoor1 = true;
     }
     b4 = millis();
     break;
@@ -89,19 +89,19 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
     break;
   case 5: //officedoor2
     if (tmp) {
-      bathroomdoor1 = true;
+      officedoor2 = true;
     }
     b6 = millis();
     break;
   case 6: //officedoor1
     if (tmp) {
-      bathroomdoor2 = true;
+      officedoor1 = true;
     }
     b7 = millis();
     break;
   case 7: //kitchendoor
     if (tmp) {
-      confdoor = true;
+      kitchendoor = true;
     }
     b8 = millis();
     break;
