@@ -1,4 +1,4 @@
-public void androidInfo(String RN, String DTA, boolean a, String t) {
+public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
   Door door = new Door(RN, DTA, a, t);
   int d = day();    // Values from 1 - 31
   int m = month();  // Values from 1 - 12
@@ -7,7 +7,6 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
   int min = minute();
   int sec = second();
 
-  //String str = String.valueOf(d);
   String month = "";
   switch(m) {
   case 1:
@@ -48,13 +47,13 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
     break;
   }
   t = String.valueOf(d) + "-" + String.valueOf(month) + "-" +String.valueOf(y) + " " + String.valueOf(h) + ":" + String.valueOf(min) + ":" + String.valueOf(sec);
-  door.setTime(t);
+  door.setTime(t); //t is DATETIME
 
 
 
 
 
-  int doornum = Integer.parseInt(door.getDoorToAccess());
+  int doornum = Integer.parseInt(DTA);
   boolean tmp = door.getAccess();
   switch(doornum) {
   case 0: //maindoor
@@ -71,13 +70,13 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
     break;
   case 2: //bathroomdoor1
     if (tmp) {
-      bathroomdoor2 = true;
+      bathroomdoor1 = true;
     }
     b3 = millis();
     break;
   case 3: //bathroomdoor2
     if (tmp) {
-      bathroomdoor1 = true;
+      bathroomdoor2 = true;
     }
     b4 = millis();
     break;
@@ -89,13 +88,13 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
     break;
   case 5: //officedoor2
     if (tmp) {
-      officedoor2 = true;
+      officedoor1 = true;
     }
     b6 = millis();
     break;
   case 6: //officedoor1
     if (tmp) {
-      officedoor1 = true;
+      officedoor2 = true;
     }
     b7 = millis();
     break;
@@ -109,11 +108,10 @@ public void androidInfo(String RN, String DTA, boolean a, String t) {
   //"C:/Users/quirk/Desktop/COSC-310-Project/project_demo/database.csv";
   String dir = "./database.csv";
   String[] head = {"RoleName", "DoorToAccess", "AccessStatus", "DATETIME"};
-  File tempFile = new File("./database.csv");
- // temp = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
+  File tempFile = new File(dir);
   Boolean check = tempFile.exists();
   String[] dis = {RN, DTA, String.valueOf(a), t};
-  try(CSVWriter writer = new CSVWriter(new FileWriter(dir, true))) {
+  try(CSVWriter writer = new CSVWriter(new FileWriter(tempFile, true))) {
     if (check) {
       writer.writeNext(dis);
     } else {

@@ -12,9 +12,7 @@ public class Door {
     time = t;
   }
 
-  public String getDoorToAccess() {
-    return this.DoorToAccess;
-  }
+
   public boolean getAccess() {
     return this.access;
   }

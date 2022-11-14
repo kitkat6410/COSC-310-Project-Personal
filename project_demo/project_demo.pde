@@ -1,15 +1,12 @@
-import java.io.FileWriter; //<>//
+ //<>// //<>// //<>// //<>//
+import java.io.FileWriter;
 import java.net.Socket;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import com.opencsv.CSVWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
 
 PImage bg;
 color g;
@@ -27,8 +24,8 @@ boolean kitchendoor;
 boolean officedoor1;
 boolean officedoor2;
 boolean bigofficedoor;
-boolean bathroomdoor1;
 boolean bathroomdoor2;
+boolean bathroomdoor1;
 boolean confdoor;
 double a;
 double b1;
@@ -39,17 +36,15 @@ double b5;
 double b6;
 double b7;
 double b8;
-String message;
-String temp;
-String[] fuck;
-Boolean header;
+
+
+
 
 
 
 
 void setup() {
   size(1280, 1038);
-  header = false;
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
   r = color(#FF0000);
@@ -69,18 +64,18 @@ void setup() {
   bathroomdoor1 = false;
   bathroomdoor2 = false;
   confdoor = false;
-  temp = "temp";
-  message = "message";
- // message = "EMPLOYEE,2,true,''"; //EXAMPLE ONLY**
+  ServerMethod("CONFERENCE,1,true"); //<>//
 }
- //<>//
+
+
+
 
 void draw() {
-  
+
   thread("server");
-      
+
   a = millis();//a - b# = how much time has passed since a certain door has been clicked
-  
+
   if (a-b1 >= 3000) {  //b1 is specific to the main door. After 3000 milliseconds, the door will turn red.
     maindoor = false;
     col_main = r;
@@ -88,25 +83,25 @@ void draw() {
       confdoor = false;
       col_conference = r;
     }
-    if (a-b3 >= 3000) { //bathroom2
-      bathroomdoor2 = false;
-      col_bathroom_2 = r;
-    }
-    if (a-b4 >= 3000) { //bathroom1
+    if (a-b3 >= 3000) { //bathroom1
       bathroomdoor1 = false;
       col_bathroom_1 = r;
+    }
+    if (a-b4 >= 3000) { //bathroom2
+      bathroomdoor2 = false;
+      col_bathroom_2 = r;
     }
     if (a-b5 >= 3000) { //ceo office
       bigofficedoor = false;
       col_big_office = r;
     }
     if (a-b6 >= 3000) { //office2
-      officedoor2 = false;
-      col_office_2 = r;
-    }
-    if (a-b7 >= 3000) { //office1
       officedoor1 = false;
       col_office_1 = r;
+    }
+    if (a-b7 >= 3000) { //office1
+      officedoor2 = false;
+      col_office_2 = r;
     }
     if (a-b8>= 3000) { //kitchen
       kitchendoor = false;
@@ -121,15 +116,15 @@ void draw() {
   stroke(col_kitchen);
   line(68, 652, 172, 652);        // kitchen line
   stroke(col_office_1);
-  line(316, 652, 416, 652);    // office 1 line
+  line(617, 652, 722, 652);    // office 1 line
   stroke(col_office_2);
-  line(617, 652, 722, 652);    // office 2 line
+  line(316, 652, 416, 652);    // office 2 line
   stroke(col_big_office);
   line(924, 652, 1027, 652);   // big office line
   stroke(col_bathroom_1);
-  line(1050, 506, 1050, 608);  // bathroom 1 line
+  line(1050, 348, 1050, 453);  // bathroom 1 line
   stroke(col_bathroom_2);
-  line(1050, 348, 1050, 453);  // bathroom 2 line
+  line(1050, 506, 1050, 608);  // bathroom 2 line
   stroke(col_conference);
   line(774, 305, 938, 305);    // conference room line
 
@@ -141,24 +136,24 @@ void draw() {
     col_kitchen = g;
   }
 
-  if (officedoor1) {
-    col_office_1 = g;
-  }
-
   if (officedoor2) {
     col_office_2 = g;
+  }
+
+  if (officedoor1) {
+    col_office_1 = g;
   }
 
   if (bigofficedoor) {
     col_big_office = g;
   }
 
-  if (bathroomdoor1) {
-    col_bathroom_1 = g;
-  }
-
   if (bathroomdoor2) {
     col_bathroom_2 = g;
+  }
+
+  if (bathroomdoor1) {
+    col_bathroom_1 = g;
   }
 
   if (confdoor) {
@@ -166,20 +161,19 @@ void draw() {
   }
 }
 
-void server() {
+void server() { //connect to AndroidStudio
   DataInputStream dataInputStream = null;
-  try(ServerSocket serverSocket = new ServerSocket(4000)){
-            Socket clientSocket = serverSocket.accept();
-            System.out.println(clientSocket+" connected\n");
-            dataInputStream = new DataInputStream(clientSocket.getInputStream());
-            String message;
-            while (true) {
-                message = dataInputStream.readUTF();
-                System.out.println(message); 
-                ServerMethod(message);
-            }
-
-        } catch (Exception e){
-            System.out.println(e.toString());
-        }
+  try(ServerSocket serverSocket = new ServerSocket(4000)) {
+    Socket clientSocket = serverSocket.accept();
+    System.out.println(clientSocket+" connected\n");
+    dataInputStream = new DataInputStream(clientSocket.getInputStream());
+    String message;
+    while (true) {
+      message = dataInputStream.readUTF();
+      System.out.println(message);
+      ServerMethod(message); //call server method to collect data
+    }
+  }
+  catch (Exception e) {
+  }
 }
