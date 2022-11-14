@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -31,15 +33,14 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     //
+    Tag detectedTag;
+    TextView txtType,txtSize,txtWrite,txtRead;
     NfcAdapter nfcAdapter;
+    IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
-    IntentFilter writingTagFilters[];
 
     //
-    Tag myTag;
     Context context;
     TextView nfc_contents;
     Button testButton;
@@ -173,60 +174,62 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(nfcAdapter == null){
-            Toast.makeText(this, "This device does not support NFC", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
-        //TODO: Determine if better solution for automatically detecting NFC card is available other then idle intent
-        readFromIntent(getIntent());
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(this,getClass()).
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-        writingTagFilters = new IntentFilter[] { tagDetected };
+        IntentFilter filter2     = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected,filter2};
     }
 
-    private void readFromIntent(Intent intent) {
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
-                || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage[] msgs = null;
-            if (rawMsgs != null) {
-                msgs = new NdefMessage[rawMsgs.length];
-                for (int i = 0; i < rawMsgs.length; i++) {
-                    msgs[i] = (NdefMessage) rawMsgs[i];
-                }
-            }
-            buildTagViews(msgs);
-        }
-    }
-
-    private void buildTagViews(NdefMessage[] msgs) {
-        if (msgs == null || msgs.length == 0) return;
-        stringNFCContent = "";
-        byte[] payload = msgs[0].getRecords()[0].getPayload();
-        String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16"; // Get the Text Encoding
-        int languageCodeLength = payload[0] & 0063; // Get the Language Code, e.g. "en"
-
-        try {
-            // Get the Text
-            stringNFCContent = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
-        } catch (UnsupportedEncodingException e) {
-            Log.e("UnsupportedEncoding", e.toString());
-        }
-
-        nfc_contents.setText("Current NFC Content: " + stringNFCContent);
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        readFromIntent(intent);
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+            detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            readFromTag(getIntent());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
+    }
+
+
+    public void readFromTag(Intent intent){
+
+        Ndef ndef = Ndef.get(detectedTag);
+
+        try{
+            ndef.connect();
+
+            Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (messages != null) {
+                NdefMessage[] ndefMessages = new NdefMessage[messages.length];
+                for (int i = 0; i < messages.length; i++) {
+                    ndefMessages[i] = (NdefMessage) messages[i];
+                }
+                NdefRecord record = ndefMessages[0].getRecords()[0];
+
+                byte[] payload = record.getPayload();
+                stringNFCContent = new String(payload);
+                stringNFCContent = stringNFCContent.substring(3);
+                nfc_contents.setText("Current NFC Content: " + stringNFCContent);
+
+                ndef.close();
+
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
+            System.out.println(e);
         }
     }
 
