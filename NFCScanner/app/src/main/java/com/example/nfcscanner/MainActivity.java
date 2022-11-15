@@ -164,6 +164,12 @@ public class MainActivity extends AppCompatActivity {
             case "CEO":
                 intNFCContent = 3;
                 break;
+            case "FIRE":
+                intNFCContent = 4;
+                break;
+            case "INTRUDER":
+                intNFCContent = 5;
+                break;
             default:
                 intNFCContent = 10;
                 break;
@@ -209,6 +215,14 @@ public class MainActivity extends AppCompatActivity {
                     accessDenied(textViewAccess);
                     collectData(stringNFCContent, intRoom, false);
                 }
+                break;
+            case 4:
+                emergencyFire(textViewAccess);
+                collectData("FIRE", intRoom, false);
+                break;
+            case 5:
+                emergencyIntruder(textViewAccess);
+                collectData("INTRUDER", intRoom, false);
                 break;
             case 10:
                 accessUnknown(textViewAccess);
@@ -311,8 +325,75 @@ public class MainActivity extends AppCompatActivity {
         textViewAccess.startAnimation(blink);
     }
 
+    private void emergencyFire(TextView textViewAccess) {
+        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        textViewAccess.setText("FIRE ALERT");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(200);
+        blink.setAnimationListener(new Animation.AnimationListener() {
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FF4200"));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
+    }
+
+    private void emergencyIntruder(TextView textViewAccess) {
+        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        textViewAccess.setText("INTRUDER ALERT");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(200);
+        blink.setAnimationListener(new Animation.AnimationListener() {
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#00BDFF"));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
+    }
+
     private void collectData(String stringNFCContent, int intRoom, boolean access) {
-        finalData = (stringNFCContent + "," + intRoom + "," + access);
+        if (stringNFCContent.equals("FIRE") || stringNFCContent.equals("INTRUDER")) {
+            finalData = stringNFCContent;
+        }
+        else {
+            finalData = (stringNFCContent + "," + intRoom + "," + access);
+        }
         sendData();
     }
 
