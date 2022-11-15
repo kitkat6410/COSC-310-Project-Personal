@@ -32,12 +32,18 @@ To implement the NFCScanner, download the latest version of android studio, clon
 
 - Sending information from Android Studio to processing using java.net libary, specifically java network sockets. Here, using Java Sockets, we can send information in the form of strings to Processing. This allows us to store that information to a locally saved excel file using Processing.
   - Using Java network sockets allowed us to succesfully connect both apps together, tying in the GUI of the NFCScanner app and the Processing office floor layout GUI to give a holistic GUI that can be used
+  
+  
  - Writing information to an excel spreadsheet and editing the same excel spreadsheet to add on new data and not rewrite.
    - Being able to write to a excel file and save new access attempts without rewriting the file has given the program the ability to store an effective database of all access attempts, succesfull or not with precise times and which part of the office was accessed.
+   ![Snippet of database logging](COSC-310-Project/Assets/Images/database output.PNG)
+   
  - included emergency features for fires or intruders that will have special behavior such that all doors either remain open or closed respectively, and an appropriate message is displayed to the user on the NFCScanner app.
    - having special behavior for emergencies and allowing the system to emulate what would happen should one of these emergencies occur is an important improvement to our system as it then gains the ability to handle exceptional circumstances and alter the systems behavior accordingly, outside of its default state of regular use.
+   
  - Reads data on NFC cards and decides what course of action to take based on the information received.
     - Altering NFCScanner to automatically read NFC data off the seperate NFC cards created improves the system as it now acts closer to a real life system, where testing functionality such as the "TEST" button and selecting roles instead of the room you wished to enter was used more as a early development prototype.
+    
  - virtual demonstration of how the employees would be provided access to rooms and how doors would open and close within processing
    - with both NFCScanner and Processing now multithreaded, and running the java socket and server respectively on seperate threads from the main GUI, our system has improved by now being able to automatically emulate the opening of a door that a user has been granted access to as soon as they scan their NFC card on the NFCScanner app, instead of manually clicking the door to emulate the functionality that the java socket has now implemented.
 
