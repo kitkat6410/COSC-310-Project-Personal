@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
+    String ipAddress = "10.0.0.14";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -402,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 DataOutputStream dataOutputStream = null;
-                try (Socket socket = new Socket("10.0.0.14", 4000)) {
+                try (Socket socket = new Socket(ipAddress, 4000)) {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
                     while (true) {
