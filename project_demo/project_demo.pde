@@ -1,5 +1,4 @@
-//<>// //<>// //<>// //<>// //<>// //<>//
-import java.io.FileWriter;
+import java.io.FileWriter; //<>//
 import java.net.Socket;
 import java.io.DataInputStream;
 import java.net.ServerSocket;
@@ -72,6 +71,7 @@ void setup() {
   // ServerMethod("CONFERENCE,1,true");
   // ServerMethod("FIRE");
   // ServerMethod("INTRUDER");
+  //ServerMethod("adkshkdlf"); //<>//
 }
 
 
@@ -185,5 +185,6 @@ void server() { //connect to AndroidStudio
     }
   }
   catch (Exception e) {
+    //System.out.println(e);
   }
 }

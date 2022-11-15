@@ -21,7 +21,11 @@ public void ServerMethod(String message) {
     col_conference =y;
     androidInfo("INTRUDER", "", false, ""); //DoorToAccess variable is not relevant for this special case. DATETIME variable will still be calculated in androidInfo
   } else {
-    String[] arr = message.split(","); //android studio client sends all the variables we need (except for DATETIME as a string separated by commas.
+    String[] arr = message.split(","); //android studio client sends all the variables we need (except for DATETIME as a string separated by commas. //<>//
+    try{
     androidInfo(arr[0], arr[1], parseBoolean(arr[2]), ""); //DATETIME IS CALCULATED within androidInfo
+    }catch(Exception e){
+      System.out.println("Invalid code. Please get your NFC card checked out by IT");
+    }
   }
 }
