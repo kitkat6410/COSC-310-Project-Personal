@@ -1,5 +1,6 @@
 public void ServerMethod(String message) {
-  mes = message;
+  String[] arr = message.split(","); //android studio client sends all the variables we need (except for DATETIME as a string separated by commas. //<>//
+  mes = arr[0];
   if (message=="FIRE") { //During FIRE special case, all doors turn green indefinitely
     col_main = g;
     col_kitchen = g;
@@ -20,11 +21,11 @@ public void ServerMethod(String message) {
     col_bathroom_2 = y;
     col_conference =y;
     androidInfo("INTRUDER", "", false, ""); //DoorToAccess variable is not relevant for this special case. DATETIME variable will still be calculated in androidInfo
-  } else {
-    String[] arr = message.split(","); //android studio client sends all the variables we need (except for DATETIME as a string separated by commas. //<>//
+  } else { //<>//
     try{
     androidInfo(arr[0], arr[1], parseBoolean(arr[2]), ""); //DATETIME IS CALCULATED within androidInfo
     }catch(Exception e){
+      System.out.println(e);
       System.out.println("Invalid code. Please get your NFC card checked out by IT");
     }
   }

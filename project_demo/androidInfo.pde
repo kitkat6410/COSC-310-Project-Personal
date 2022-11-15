@@ -1,6 +1,6 @@
 public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
- if(RN == "FIRE" || RN == "INTRUDER" || RN == "GUEST" || RN == "EMPLOYEE" || RN == "CEO" || RN == "UNKNOWN"){
-  Door door = new Door(RN, DTA, a, t);
+ if(RN.equals("FIRE") || RN.equals("INTRUDER") || RN.equals("GUEST") || RN.equals("EMPLOYEE") || RN.equals("CEO") || RN.equals("CONFERENCE") || RN.equals("UNKNOWN")){ //<>//
+  Door door = new Door(RN, DTA, a, t); //<>//
   int d = day();    // Values from 1 - 31
   int m = month();  // Values from 1 - 12
   int y = year();   // 2003, 2004, 2005, etc.

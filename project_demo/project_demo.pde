@@ -68,9 +68,9 @@ void setup() {
   confdoor = false;
   mes = "mes";
   //** TEST CODE **
-  // ServerMethod("CONFERENCE,1,true");
-  // ServerMethod("FIRE");
-  // ServerMethod("INTRUDER");
+   ServerMethod("CONFERENCE,1,true");
+  //ServerMethod("FIRE");
+//  ServerMethod("INTRUDER");
   //ServerMethod("adkshkdlf"); //<>//
 }
 
