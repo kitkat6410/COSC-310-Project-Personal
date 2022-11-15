@@ -41,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
-    String ipAddress = "10.0.0.14";
+    String ipAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        ipAddress = intent.getStringExtra("ip_address");
 
         //textview "textViewAccess"
         textViewAccess = findViewById(R.id.textViewAccess);

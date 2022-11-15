@@ -13,7 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NFCScanner">
         <activity
-
+            android:name=".MainActivityIpAddress"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".MainActivityTutorial"
             android:exported="false">
             <meta-data
@@ -26,11 +32,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
