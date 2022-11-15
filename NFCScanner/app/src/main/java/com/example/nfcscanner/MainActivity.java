@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
-    String ipAddress;
+    String ipAddress = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
