@@ -3,7 +3,6 @@ package com.example.nfcscanner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -27,18 +26,17 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    //
+    //initialize required NFC variables
     Tag detectedTag;
     NfcAdapter nfcAdapter;
     IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
 
-    //
-    Context context;
+    //initialize activity objects
     TextView textViewAccess;
     Spinner spinnerRoomAccess;
 
-    //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
+    //String and Int Variables to determine company role of NFC Card emulated and door requested to access
     String roomString, stringNFCContent, finalData, accessAttemptInfo;
     int intRoom, intNFCContent;
     String ipAddress = "";
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //pull ip address variable value from MainActivityIpAddress
         Intent intent = getIntent();
         ipAddress = intent.getStringExtra("ip_address");
 
@@ -62,20 +61,17 @@ public class MainActivity extends AppCompatActivity {
         spinnerRoomAccess = findViewById(R.id.spinnerRoomAccess);
         spinnerRoomAccess.setAdapter(adapter);
 
-        //
-        context = this;
-
+        //get device NFC adapter
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-                new Intent(this, getClass()).
-                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected, filter2};
     }
 
+    //from AndroidManifest.xml, when NDEF tag discovered in intent filter
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
@@ -86,13 +82,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     protected void onResume() {
 
         super.onResume();
+        //enable NFC scanning in backround during app runtime
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
     }
 
-
+    //reads raw data from NDEF NFC tag, and translates it from byte data to String variable named 'stringNFCContent'
     public void readFromTag(Intent intent) {
 
         Ndef ndef = Ndef.get(detectedTag);
@@ -109,12 +107,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 NdefRecord record = ndefMessages[0].getRecords()[0];
 
+                //converts record from above payload reader to byte array
                 byte[] payload = record.getPayload();
+                //converts byte array to string
                 stringNFCContent = new String(payload);
+                //appends off initial payload data
                 stringNFCContent = stringNFCContent.substring(3);
 
+                //stops NFC scanning
                 ndef.close();
 
+                //call onScan() method
                 onScan();
             }
         } catch (Exception e) {
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onScan() {
-        //spinner value chosen for "access level" stored to string and then integer variable
+        //spinner value chosen for room stored to string and then integer variable
         roomString = spinnerRoomAccess.getSelectedItem().toString();
         switch (roomString) {
             case "FRONT DOOR":
@@ -153,8 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        //spinner value chosen for "emulated NFC card" stored to string and then integer variable
-
+        //NFC card content to string 'stringNFCContent' converted to int value
         switch (stringNFCContent) {
             case "CONFERENCE":
                 intNFCContent = 0;
@@ -168,18 +170,22 @@ public class MainActivity extends AppCompatActivity {
             case "CEO":
                 intNFCContent = 3;
                 break;
+                //special case for if 'fire emergency' NFC card is scanned
             case "FIRE":
                 intNFCContent = 4;
                 break;
+            //special case for if 'intruder emergency' NFC card is scanned
             case "INTRUDER":
                 intNFCContent = 5;
                 break;
+            //default case for if NFC card data is not recognised as above cases
             default:
                 intNFCContent = 10;
                 break;
         }
 
-        //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
+        //if NFC card company role is allowed into selected room, goto accessGranted() and pas data to collectData()
+        //otherwise if role is not allowed, goto accessDenied() and pass data to collectData()
         switch (intNFCContent) {
             case 0:
                 if (intRoom == 1) {
@@ -220,14 +226,18 @@ public class MainActivity extends AppCompatActivity {
                     collectData(stringNFCContent, intRoom, false);
                 }
                 break;
+
+            //special case if fire emergency NFC card is scanned, goto emergencyFire() and pass data to collectData()
             case 4:
                 emergencyFire(textViewAccess);
                 collectData("FIRE", intRoom, false);
                 break;
+            //special case if intruder emergency NFC card is scanned, goto emergencyIntruder() and pass data to collectData()
             case 5:
                 emergencyIntruder(textViewAccess);
                 collectData("INTRUDER", intRoom, false);
                 break;
+            //default case should NFC card content cannot be recognised, goto accessUnknown() and pass data to collectData()
             case 10:
                 accessUnknown(textViewAccess);
                 collectData("UNKNOWN", intRoom, false);
@@ -299,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void accessUnknown(TextView textViewAccess) {
-        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        //on event NFC card data does not meet cases, set textViewAccess to "UNKNOWN CARD" and play animation
         textViewAccess.setText("UNKNOWN CARD");
 
         //settings for animation
@@ -330,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void emergencyFire(TextView textViewAccess) {
-        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        //on fire emergency, set textViewAccess to "FIRE ALERT" and play animation
         textViewAccess.setText("FIRE ALERT");
 
         //settings for animation
@@ -361,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void emergencyIntruder(TextView textViewAccess) {
-        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        //on intruder emergency, set textViewAccess to "INTRUDER ALERT" and play animation
         textViewAccess.setText("INTRUDER ALERT");
 
         //settings for animation
@@ -391,7 +401,10 @@ public class MainActivity extends AppCompatActivity {
         textViewAccess.startAnimation(blink);
     }
 
+    //collects individual data from access attempt (NFC Card data, room accessed, and if attempt was successful
+    //stores data into single string finalData to be sent to sendData()
     private void collectData(String stringNFCContent, int intRoom, boolean access) {
+        //if emergency event, send only type of emergency and no door or access info
         if (stringNFCContent.equals("FIRE") || stringNFCContent.equals("INTRUDER")) {
             finalData = stringNFCContent;
         }
@@ -401,15 +414,19 @@ public class MainActivity extends AppCompatActivity {
         sendData();
     }
 
+    //on seperate thread from GUI, run client side of java socket to send finalData to server
     private void sendData() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 DataOutputStream dataOutputStream = null;
+                //open socket connection to user inputted ipAddress at port 4000
                 try (Socket socket = new Socket(ipAddress, 4000)) {
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
                     while (true) {
+                        //if new user data is different from saved previous attempt, send data over socket and save new user data as current
+                        //otherwise, check newest input until different from saved input
                         if (accessAttemptInfo != finalData) {
                             dataOutputStream.writeUTF(finalData);
                         }
