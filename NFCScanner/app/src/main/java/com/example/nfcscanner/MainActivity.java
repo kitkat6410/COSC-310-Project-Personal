@@ -164,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
             case "CEO":
                 intNFCContent = 3;
                 break;
+            default:
+                intNFCContent = 10;
+                break;
         }
 
         //if NFC card access level lower then requested access, goto function "access denied", other wise goto "access granted"
@@ -207,6 +210,11 @@ public class MainActivity extends AppCompatActivity {
                     collectData(stringNFCContent, intRoom, false);
                 }
                 break;
+            case 10:
+                accessUnknown(textViewAccess);
+                collectData("UNKNOWN", intRoom, false);
+                break;
+
         }
     }
 
@@ -272,13 +280,43 @@ public class MainActivity extends AppCompatActivity {
         textViewAccess.startAnimation(blink);
     }
 
+    private void accessUnknown(TextView textViewAccess) {
+        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        textViewAccess.setText("UNKNOWN CARD");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener() {
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFAA00"));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
+    }
+
     private void collectData(String stringNFCContent, int intRoom, boolean access) {
         finalData = (stringNFCContent + "," + intRoom + "," + access);
         sendData();
     }
 
     private void sendData() {
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
