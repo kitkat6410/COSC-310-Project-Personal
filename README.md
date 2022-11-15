@@ -35,22 +35,22 @@ To implement the NFCScanner, download the latest version of android studio, clon
   
  - Writing information to an excel spreadsheet and editing the same excel spreadsheet to add on new data and not rewrite.
    - Being able to write to a excel file and save new access attempts without rewriting the file has given the program the ability to store an effective database of all access attempts, succesfull or not with precise times and which part of the office was accessed.
-   ![Snippet of database logging](COSC-310-Project/Assets/Images/database_output.PNG)
+   ![Snippet of database logging](COSC-310-Project/Assets/Images/database-output.PNG)
    
  - included emergency features for fires or intruders that will have special behavior such that all doors either remain open or closed respectively, and an appropriate message is displayed to the user on the NFCScanner app.
    - having special behavior for emergencies and allowing the system to emulate what would happen should one of these emergencies occur is an important improvement to our system as it then gains the ability to handle exceptional circumstances and alter the systems behavior accordingly, outside of its default state of regular use.
-   ![NFCScanner fire](/Assets/Images/screenshot_(8).PNG)
-   ![NFCScanner intruder](/Assets/Images/screenshot_(9).PNG)
+   ![NFCScanner fire](/Assets/Images/screenshot-(8).PNG)
+   ![NFCScanner intruder](/Assets/Images/screenshot-(9).PNG)
    
  - Reads data on NFC cards and decides what course of action to take based on the information received.
     - Altering NFCScanner to automatically read NFC data off the seperate NFC cards created improves the system as it now acts closer to a real life system, where testing functionality such as the "TEST" button and selecting roles instead of the room you wished to enter was used more as a early development prototype.
-   ![NFCScanner pending](/Assets/Images/screenshot_(4).PNG)
-   ![NFCScanner access granted](/Assets/Images/screenshot_(5).PNG)
-   ![NFCScanner access denied](/Assets/Images/screenshot_(6).PNG)
-   ![NFCScanner unknown card](/Assets/Images/screenshot_(7).PNG)
+   ![NFCScanner pending](/Assets/Images/screenshot-(4).PNG)
+   ![NFCScanner access granted](/Assets/Images/screenshot-(5).PNG)
+   ![NFCScanner access denied](/Assets/Images/screenshot-(6).PNG)
+   ![NFCScanner unknown card](/Assets/Images/screenshot-(7).PNG)
     
  - virtual demonstration of how the employees would be provided access to rooms and how doors would open and close within processing
    - with both NFCScanner and Processing now multithreaded, and running the java socket and server respectively on seperate threads from the main GUI, our system has improved by now being able to automatically emulate the opening of a door that a user has been granted access to as soon as they scan their NFC card on the NFCScanner app, instead of manually clicking the door to emulate the functionality that the java socket has now implemented.
-   ![Snippet of database logging](/Assets/Images/floor_layout_all_closed.PNG)
-   ![Snippet of database logging](/Assets/Images/floor_layout_fire.PNG)
+   ![Snippet of database logging](/Assets/Images/floor-layout-all-closed.PNG)
+   ![Snippet of database logging](/Assets/Images/floor-layout-fire.PNG)
 
