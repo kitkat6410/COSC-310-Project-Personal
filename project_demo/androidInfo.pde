@@ -1,5 +1,6 @@
-public void androidInfo(String RN, String DTA, boolean a, String t) { //<>// //<>//
-  Door door = new Door(RN, DTA, a, t);
+public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
+ if(RN.equals("FIRE") || RN.equals("INTRUDER") || RN.equals("GUEST") || RN.equals("EMPLOYEE") || RN.equals("CEO") || RN.equals("CONFERENCE") || RN.equals("UNKNOWN")){ //<>//
+  Door door = new Door(RN, DTA, a, t); //<>//
   int d = day();    // Values from 1 - 31
   int m = month();  // Values from 1 - 12
   int y = year();   // 2003, 2004, 2005, etc.
@@ -125,4 +126,8 @@ public void androidInfo(String RN, String DTA, boolean a, String t) { //<>// //<
   catch(Exception e) {
     print(e);
   }
+}
+else{
+  System.out.println("Your Role Name is invalid. Pleace get your NFC card checked out by IT");
+}
 }
