@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     //
     Context context;
-    TextView nfc_contents;
     TextView textViewAccess;
     Spinner spinnerRoomAccess;
 
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerRoomAccess.setAdapter(adapter);
 
         //
-        nfc_contents = findViewById(R.id.nfc_contents);
         context = this;
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 byte[] payload = record.getPayload();
                 stringNFCContent = new String(payload);
                 stringNFCContent = stringNFCContent.substring(3);
-                nfc_contents.setText("Current NFC Content: " + stringNFCContent);
 
                 ndef.close();
 
