@@ -55,6 +55,6 @@ To implement the NFCScanner, download the latest version of android studio, clon
  - virtual demonstration of how the employees would be provided access to rooms and how doors would open and close within processing
    - with both NFCScanner and Processing now multithreaded, and running the java socket and server respectively on seperate threads from the main GUI, our system has improved by now being able to automatically emulate the opening of a door that a user has been granted access to as soon as they scan their NFC card on the NFCScanner app, instead of manually clicking the door to emulate the functionality that the java socket has now implemented.
    - 
-   ![Snippet of database logging](/Assets/Images/floor-layout-all-closed.PNG)
-   ![Snippet of database logging](/Assets/Images/floor-layout-fire.PNG)
+   ![Snippet of database logging](/Assets/Images/floor-layout-all-closed.jpg)
+   ![Snippet of database logging](/Assets/Images/floor-layout-fire.jpg)
 
