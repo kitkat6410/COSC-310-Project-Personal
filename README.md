@@ -36,7 +36,7 @@ To implement the NFCScanner, download the latest version of android studio, clon
  - Writing information to an excel spreadsheet and editing the same excel spreadsheet to add on new data and not rewrite.
    - Being able to write to a excel file and save new access attempts without rewriting the file has given the program the ability to store an effective database of all access attempts, succesfull or not with precise times and which part of the office was accessed.
    - 
-   ![Snippet of database logging](COSC-310-Project/Assets/Images/database.PNG)
+   ![Snippet of database logging](Assets/Images/database.PNG)
    
  - included emergency features for fires or intruders that will have special behavior such that all doors either remain open or closed respectively, and an appropriate message is displayed to the user on the NFCScanner app.
    - having special behavior for emergencies and allowing the system to emulate what would happen should one of these emergencies occur is an important improvement to our system as it then gains the ability to handle exceptional circumstances and alter the systems behavior accordingly, outside of its default state of regular use.
