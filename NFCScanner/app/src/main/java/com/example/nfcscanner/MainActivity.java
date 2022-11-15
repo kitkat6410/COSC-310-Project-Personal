@@ -17,12 +17,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.os.StrictMode;
 
 import java.io.*;
 import java.net.Socket;
