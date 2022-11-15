@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         blink.setDuration(500);
         blink.setStartOffset(20);
         blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(200);
+        blink.setRepeatCount(2000);
         blink.setAnimationListener(new Animation.AnimationListener() {
 
             //play animation and with settings described below
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         blink.setDuration(500);
         blink.setStartOffset(20);
         blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(200);
+        blink.setRepeatCount(2000);
         blink.setAnimationListener(new Animation.AnimationListener() {
 
             //play animation and with settings described below
