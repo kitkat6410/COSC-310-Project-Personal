@@ -15,8 +15,6 @@ import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -25,17 +23,14 @@ import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.os.StrictMode;
-import java.io.UnsupportedEncodingException;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     //
     Tag detectedTag;
-    TextView txtType, txtSize, txtWrite, txtRead;
     NfcAdapter nfcAdapter;
     IntentFilter[] readTagFilters;
     PendingIntent pendingIntent;
@@ -43,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     //
     Context context;
     TextView nfc_contents;
-    Button testButton;
     TextView textViewAccess;
     Spinner spinnerRoomAccess;
 
@@ -74,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         nfc_contents = findViewById(R.id.nfc_contents);
         context = this;
 
-        //TODO: Is this really necessary? If you're trying to use a NFC app on a non NFC compatible device then... :/
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
@@ -124,106 +117,14 @@ public class MainActivity extends AppCompatActivity {
                 stringNFCContent = stringNFCContent.substring(3);
                 nfc_contents.setText("Current NFC Content: " + stringNFCContent);
 
-                //TODO: See if this does the thing
-                onScan();
-
                 ndef.close();
 
+                onScan();
             }
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
             System.out.println(e);
         }
-    }
-
-    private void accessGranted(TextView textViewAccess) {
-        //on successful access attempt, change "textViewAccess" to access granted and play animation
-        textViewAccess.setText("ACCESS GRANTED");
-
-        //settings for animation
-        Animation blink = new AlphaAnimation(0.f, 1.f);
-        blink.setDuration(500);
-        blink.setStartOffset(20);
-        blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(5);
-        blink.setAnimationListener(new Animation.AnimationListener() {
-
-            //play animation and with settings described below
-            @Override
-            public void onAnimationStart(Animation animation) {
-                textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
-                textViewAccess.setText("ACCESS PENDING");
-            }
-        });
-        textViewAccess.startAnimation(blink);
-    }
-
-    private void accessDenied(TextView textViewAccess) {
-        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
-        textViewAccess.setText("ACCESS DENIED");
-
-        //settings for animation
-        Animation blink = new AlphaAnimation(0.f, 1.f);
-        blink.setDuration(500);
-        blink.setStartOffset(20);
-        blink.setRepeatMode(Animation.REVERSE);
-        blink.setRepeatCount(5);
-        blink.setAnimationListener(new Animation.AnimationListener() {
-
-            //play animation and with settings described below
-            @Override
-            public void onAnimationStart(Animation animation) {
-                textViewAccess.setTextColor(Color.parseColor("#FF0000"));
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
-                textViewAccess.setText("ACCESS PENDING");
-            }
-        });
-        textViewAccess.startAnimation(blink);
-    }
-
-    private void collectData(String stringNFCContent, int intRoom, boolean access) {
-        finalData = (stringNFCContent + "," + intRoom + "," + access);
-        sendData();
-    }
-
-    private void sendData() {
-
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                DataOutputStream dataOutputStream = null;
-                try (Socket socket = new Socket("10.0.0.14", 4000)) {
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
-
-                    while (true) {
-                        if (accessAttemptInfo != finalData) {
-                            dataOutputStream.writeUTF(finalData);
-                        }
-                        accessAttemptInfo = finalData;
-                    }
-
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-        });
     }
 
     private void onScan() {
@@ -315,5 +216,95 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    private void accessGranted(TextView textViewAccess) {
+        //on successful access attempt, change "textViewAccess" to access granted and play animation
+        textViewAccess.setText("ACCESS GRANTED");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener() {
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#0FFF00"));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
+    }
+
+    private void accessDenied(TextView textViewAccess) {
+        //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
+        textViewAccess.setText("ACCESS DENIED");
+
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(5);
+        blink.setAnimationListener(new Animation.AnimationListener() {
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FF0000"));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
+    }
+
+    private void collectData(String stringNFCContent, int intRoom, boolean access) {
+        finalData = (stringNFCContent + "," + intRoom + "," + access);
+        sendData();
+    }
+
+    private void sendData() {
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                DataOutputStream dataOutputStream = null;
+                try (Socket socket = new Socket("10.0.0.14", 4000)) {
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+                    while (true) {
+                        if (accessAttemptInfo != finalData) {
+                            dataOutputStream.writeUTF(finalData);
+                        }
+                        accessAttemptInfo = finalData;
+                    }
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        });
     }
 }
