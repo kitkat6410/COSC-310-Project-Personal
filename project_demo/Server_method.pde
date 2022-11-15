@@ -1,7 +1,7 @@
 public void ServerMethod(String message) {
   String[] arr = message.split(","); //android studio client sends all the variables we need (except for DATETIME as a string separated by commas. //<>//
   mes = arr[0];
-  if (message=="FIRE") { //During FIRE special case, all doors turn green indefinitely
+  if (mes.equals("FIRE")) { //During FIRE special case, all doors turn green indefinitely
     col_main = g;
     col_kitchen = g;
     col_office_1 = g;
@@ -11,15 +11,15 @@ public void ServerMethod(String message) {
     col_bathroom_2 = g;
     col_conference =g;
     androidInfo("FIRE", "", false, ""); //DoorToAccess variable is not relevant for this special case. DATETIME variable will still be calculated in androidInfo
-  } else if (message == "INTRUDER") { //During INTRUDER special case, all doors turn yellow indefinitely
-    col_main = y;
-    col_kitchen = y;
-    col_office_1 = y;
-    col_office_2 = y;
-    col_big_office = y;
-    col_bathroom_1 = y;
-    col_bathroom_2 = y;
-    col_conference =y;
+  } else if (mes.equals("INTRUDER")) { //During INTRUDER special case, all doors turn blue indefinitely
+    col_main = b;
+    col_kitchen = b;
+    col_office_1 = b;
+    col_office_2 = b;
+    col_big_office = b;
+    col_bathroom_1 = b;
+    col_bathroom_2 = b;
+    col_conference =b;
     androidInfo("INTRUDER", "", false, ""); //DoorToAccess variable is not relevant for this special case. DATETIME variable will still be calculated in androidInfo
   } else { //<>//
     try{

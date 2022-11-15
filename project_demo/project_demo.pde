@@ -10,7 +10,7 @@ import java.util.List;
 PImage bg;
 color g;
 color r;
-color y;
+color b;
 color col_main;
 color col_kitchen;
 color col_office_1;
@@ -49,7 +49,7 @@ void setup() {
   bg = loadImage("Office_Building_Layout_Final.png");
   g = color(#008631);
   r = color(#FF0000);
-  y = color(#FFBF00);
+  b = color(#00BDFF);
   col_main = r;
   col_kitchen = r;
   col_office_1 = r;
@@ -68,10 +68,10 @@ void setup() {
   confdoor = false;
   mes = "mes";
   //** TEST CODE **
-   ServerMethod("CONFERENCE,1,true");
+   //ServerMethod("CONFERENCE,1,true");
   //ServerMethod("FIRE");
 //  ServerMethod("INTRUDER");
-  //ServerMethod("adkshkdlf"); //<>//
+  //ServerMethod("adkshkdlf");
 }
 
 
@@ -79,7 +79,7 @@ void setup() {
 
 void draw() {
 
-  thread("server");
+  thread("server"); //<>//
 
   a = millis();//a - b# = how much time has passed since a certain door has been clicked
 
