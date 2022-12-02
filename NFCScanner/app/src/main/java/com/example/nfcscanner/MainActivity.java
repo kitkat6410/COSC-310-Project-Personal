@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     int intRoom, intNFCContent;
     String ipAddress = "";
 
+    //Kyra's variables
+    public static int counter = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             case "CEO":
                 intNFCContent = 3;
                 break;
-                //special case for if 'fire emergency' NFC card is scanned
+            //special case for if 'fire emergency' NFC card is scanned
             case "FIRE":
                 intNFCContent = 4;
                 break;
@@ -186,64 +189,74 @@ public class MainActivity extends AppCompatActivity {
 
         //if NFC card company role is allowed into selected room, goto accessGranted() and pas data to collectData()
         //otherwise if role is not allowed, goto accessDenied() and pass data to collectData()
-        switch (intNFCContent) {
-            case 0:
-                if (intRoom == 1) {
-                    accessGranted(textViewAccess);
-                    collectData(stringNFCContent, intRoom, true);
-                } else {
-                    accessDenied(textViewAccess);
-                    collectData(stringNFCContent, intRoom, false);
-                }
-                break;
+          if(counter >= 5){
+              supervisorAlert(textViewAccess);
+              collectData(stringNFCContent, intRoom, false);
+              Intent intent = new Intent(this, otpActivity.class);
+              startActivity(intent);
 
-            case 1:
-                if (intRoom == 0 || intRoom == 2 || intRoom == 3) {
-                    accessGranted(textViewAccess);
-                    collectData(stringNFCContent, intRoom, true);
-                } else {
-                    accessDenied(textViewAccess);
-                    collectData(stringNFCContent, intRoom, false);
-                }
-                break;
 
-            case 2:
-                if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7) {
-                    accessGranted(textViewAccess);
-                    collectData(stringNFCContent, intRoom, true);
-                } else {
-                    accessDenied(textViewAccess);
-                    collectData(stringNFCContent, intRoom, false);
-                }
-                break;
+          }
+          else {
+              switch (intNFCContent) {
+                  case 0:
+                      if (intRoom == 1) {
+                          accessGranted(textViewAccess);
+                          collectData(stringNFCContent, intRoom, true);
+                      } else {
+                          accessDenied(textViewAccess);
+                          collectData(stringNFCContent, intRoom, false);
+                      }
+                      break;
 
-            case 3:
-                if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7) {
-                    accessGranted(textViewAccess);
-                    collectData(stringNFCContent, intRoom, true);
-                } else {
-                    accessDenied(textViewAccess);
-                    collectData(stringNFCContent, intRoom, false);
-                }
-                break;
+                  case 1:
+                      if (intRoom == 0 || intRoom == 2 || intRoom == 3) {
+                          accessGranted(textViewAccess);
+                          collectData(stringNFCContent, intRoom, true);
+                      } else {
+                          accessDenied(textViewAccess);
+                          collectData(stringNFCContent, intRoom, false);
+                      }
+                      break;
 
-            //special case if fire emergency NFC card is scanned, goto emergencyFire() and pass data to collectData()
-            case 4:
-                emergencyFire(textViewAccess);
-                collectData("FIRE", intRoom, false);
-                break;
-            //special case if intruder emergency NFC card is scanned, goto emergencyIntruder() and pass data to collectData()
-            case 5:
-                emergencyIntruder(textViewAccess);
-                collectData("INTRUDER", intRoom, false);
-                break;
-            //default case should NFC card content cannot be recognised, goto accessUnknown() and pass data to collectData()
-            case 10:
-                accessUnknown(textViewAccess);
-                collectData("UNKNOWN", intRoom, false);
-                break;
+                  case 2:
+                      if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 5 || intRoom == 6 || intRoom == 7) {
+                          accessGranted(textViewAccess);
+                          collectData(stringNFCContent, intRoom, true);
+                      } else {
+                          accessDenied(textViewAccess);
+                          collectData(stringNFCContent, intRoom, false);
+                      }
+                      break;
 
-        }
+                  case 3:
+                      if (intRoom == 0 || intRoom == 2 || intRoom == 3 || intRoom == 4 || intRoom == 7) {
+                          accessGranted(textViewAccess);
+                          collectData(stringNFCContent, intRoom, true);
+                      } else {
+                          accessDenied(textViewAccess);
+                          collectData(stringNFCContent, intRoom, false);
+                      }
+                      break;
+
+                  //special case if fire emergency NFC card is scanned, goto emergencyFire() and pass data to collectData()
+                  case 4:
+                      emergencyFire(textViewAccess);
+                      collectData("FIRE", intRoom, false);
+                      break;
+                  //special case if intruder emergency NFC card is scanned, goto emergencyIntruder() and pass data to collectData()
+                  case 5:
+                      emergencyIntruder(textViewAccess);
+                      collectData("INTRUDER", intRoom, false);
+                      break;
+                  //default case should NFC card content cannot be recognised, goto accessUnknown() and pass data to collectData()
+                  case 10:
+                      accessUnknown(textViewAccess);
+                      collectData("UNKNOWN", intRoom, false);
+                      break;
+
+              }
+          }
     }
 
     private void accessGranted(TextView textViewAccess) {
@@ -401,10 +414,45 @@ public class MainActivity extends AppCompatActivity {
         textViewAccess.startAnimation(blink);
     }
 
+    private void supervisorAlert(TextView textViewAccess) {
+        textViewAccess.setText("5 FAILED \n ATTEMPTS \n SUPERVISOR \n REQUIRED");
+        //settings for animation
+        Animation blink = new AlphaAnimation(0.f, 1.f);
+        blink.setDuration(500);
+        blink.setStartOffset(20);
+        blink.setRepeatMode(Animation.REVERSE);
+        blink.setRepeatCount(2000);
+        blink.setAnimationListener(new Animation.AnimationListener() {
+
+            //play animation and with settings described below
+            @Override
+            public void onAnimationStart(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFA500"));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textViewAccess.setTextColor(Color.parseColor("#FFFFFF"));
+                textViewAccess.setText("ACCESS PENDING");
+            }
+        });
+        textViewAccess.startAnimation(blink);
+    }
+
+
+
+
     //collects individual data from access attempt (NFC Card data, room accessed, and if attempt was successful
     //stores data into single string finalData to be sent to sendData()
     private void collectData(String stringNFCContent, int intRoom, boolean access) {
         //if emergency event, send only type of emergency and no door or access info
+        if(access == false){
+            counter ++;
+        }
         if (stringNFCContent.equals("FIRE") || stringNFCContent.equals("INTRUDER")) {
             finalData = stringNFCContent;
         }

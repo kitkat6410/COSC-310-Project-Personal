@@ -4,6 +4,7 @@ plugins {
 
 android {
     namespace 'com.example.nfcscanner'
+    useLibrary 'org.apache.http.legacy'
     compileSdk 32
 
     defaultConfig {
