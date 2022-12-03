@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
         //if NFC card company role is allowed into selected room, goto accessGranted() and pas data to collectData()
         //otherwise if role is not allowed, goto accessDenied() and pass data to collectData()
-          if(counter >= 5){
+          if(counter >= 4){
               supervisorAlert(textViewAccess);
               collectData(stringNFCContent, intRoom, false);
               Intent intent = new Intent(this, otpActivity.class);
