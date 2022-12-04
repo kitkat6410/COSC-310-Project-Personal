@@ -79,7 +79,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
                                     pb.setVisibility(View.GONE);
                                     buttonVerify.setVisibility(View.VISIBLE);
                                     if(task.isSuccessful()){
-                                        Toast.makeText(VerifyOtpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(VerifyOtpActivity.this, "Successfully Reset System!", Toast.LENGTH_LONG).show();
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);

@@ -251,6 +251,10 @@ public class MainActivity extends AppCompatActivity {
                       emergencyIntruder(textViewAccess);
                       collectData("INTRUDER", intRoom, false);
                       break;
+                  //supervisor case
+                  case 6:
+                      accessGranted(textViewAccess);
+                      collectData(stringNFCContent, intRoom, true);
                   //default case should NFC card content cannot be recognised, goto accessUnknown() and pass data to collectData()
                   case 10:
                       accessUnknown(textViewAccess);
