@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "122214170087",
+    "project_id": "nfcscanner-3ad5d",
+    "storage_bucket": "nfcscanner-3ad5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122214170087:android:64c79dd14508d0cee79142",
+        "android_client_info": {
+          "package_name": "com.example.nfcscanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "122214170087-j0tab0c5e5bvohpjlmrjcuuiet77mjec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtD3eAnt60-iUTgQTSI3rwh3nxjFxORH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "122214170087-j0tab0c5e5bvohpjlmrjcuuiet77mjec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

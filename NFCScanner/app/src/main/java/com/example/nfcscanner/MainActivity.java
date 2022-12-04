@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected, filter2};
+        //Intent intent2 = new Intent(this, SendOtpActivity.class);
+       // startActivity(intent2);
     }
 
     //from AndroidManifest.xml, when NDEF tag discovered in intent filter
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
           if(counter >= 4){
               supervisorAlert(textViewAccess);
               collectData(stringNFCContent, intRoom, false);
-              Intent intent = new Intent(this, otpActivity.class);
+              Intent intent = new Intent(this, SendOtpActivity.class);
               startActivity(intent);
 
 
