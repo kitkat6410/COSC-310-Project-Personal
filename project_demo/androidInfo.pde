@@ -1,5 +1,5 @@
 public void androidInfo(String RN, String DTA, boolean a, String t) { //<>//
- if(RN.equals("FIRE") || RN.equals("INTRUDER") || RN.equals("GUEST") || RN.equals("EMPLOYEE") || RN.equals("CEO") || RN.equals("CONFERENCE") || RN.equals("UNKNOWN")){ //<>//
+ if(RN.equals("FIRE") || RN.equals("INTRUDER") || RN.equals("GUEST") || RN.equals("EMPLOYEE") || RN.equals("CEO") || RN.equals("CONFERENCE") || RN.equals("SUPERVISOR") ||RN.equals("UNKNOWN")){ //<>//
   Door door = new Door(RN, DTA, a, t); //<>//
   int d = day();    // Values from 1 - 31
   int m = month();  // Values from 1 - 12

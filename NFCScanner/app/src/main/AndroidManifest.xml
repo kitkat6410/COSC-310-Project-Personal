@@ -13,6 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NFCScanner">
         <activity
+            android:name=".ValidateGeoActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".VerifyOtpActivity"
             android:exported="false"
             android:screenOrientation="portrait"

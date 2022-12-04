@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected, filter2};
-        //Intent intent2 = new Intent(this, SendOtpActivity.class);
+      //  Intent intent2 = new Intent(this, ValidateGeoActivity.class);
        // startActivity(intent2);
     }
 
@@ -183,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
             case "INTRUDER":
                 intNFCContent = 5;
                 break;
+            case "SUPERVISOR":
+                intNFCContent = 6;
+                break;
             //default case for if NFC card data is not recognised as above cases
             default:
                 intNFCContent = 10;
@@ -255,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                   case 6:
                       accessGranted(textViewAccess);
                       collectData(stringNFCContent, intRoom, true);
+                      break;
                   //default case should NFC card content cannot be recognised, goto accessUnknown() and pass data to collectData()
                   case 10:
                       accessUnknown(textViewAccess);

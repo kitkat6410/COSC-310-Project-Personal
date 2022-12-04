@@ -55,6 +55,7 @@ dependencies {
     implementation files('libs\\httpcore5-5.2.jar')
     implementation files('libs\\httpcore5-reactive-5.2.jar')
     implementation files('libs\\httpcore5-h2-5.2.jar')
+    implementation files('libs\\json-20220924.jar')
     testImplementation files('libs\\httpcore5-testing-5.2.jar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
