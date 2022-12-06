@@ -68,7 +68,7 @@ The first feature was implemented using Abstract API Geolocation service. The se
 - ![Vancouver Geolocation](/Assets/Images/Vancouver_Geolocation.png)
 
 If the user is not within British Columbia when they make the request, this screen will show:
--![Error_Geolocation](/Assets/Images/Error_Geolocation.png)
+- ![Error_Geolocation](/Assets/Images/Error_Geolocation.png)
 
 The retry button would be useful for a user if they forgot to turn their vpn off. 
 
