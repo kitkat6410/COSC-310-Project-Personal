@@ -58,3 +58,32 @@ To implement the NFCScanner, download the latest version of android studio, clon
    ![Snippet of database logging](/Assets/Images/floor-layout-all-closed.jpg)
    ![Snippet of database logging](/Assets/Images/floor-layout-fire.jpg)
 
+# API and Features added by Kyra Barnes
+
+## Feature 1: Geolocation
+
+The first feature was implemented using Abstract API Geolocation service. The service sends many parameters using JSON. I used city, region_geoname_id, and security > is_vpn. If the user is located within British Columbia and is not using a VPN (Note: The NordVPN service I used is more powrful than Abstract API VPN detection, but the code is there) a screen with the city name of the user will show:
+- ![Checking Geolocation](/Assets/Images/check_loc.jpg)
+- ![Kelowna Geolocation](/Assets/Images/Kelowna_Geolocation.png)
+- ![Vancouver Geolocation](/Assets/Images/Vancouver_Geolocation.png)
+
+If the user is not within British Columbia when they make the request, this screen will show:
+-![Error_Geolocation](/Assets/Images/Error_Geolocation.png)
+
+The retry button would be useful for a user if they forgot to turn their vpn off. 
+
+The continue button then takes users to the ACCESS PENDING page
+
+![Snippet of database logging](/Assets/Images/screenshot-(4).jpg)
+
+## Feature 2: One Time Password (OTP)
+
+For the second feature, I used Firebase API Phone Verification OTP. This feature required a new type of user called Supervisor who has access to all doors. After 5 failed attempts, the system is locked the Supervisor Required Screen appears.
+![Supervisor Required](Assets/Images/sup_req.png)
+
+The Supervisor NFC Card is then required to unlock the system. A supervisor will need to login using their password and phone number. They are then sent a one time password which they have to input into the system. After that, the system is unlocked and can be used until another 5 failed access attempts.
+- ![Welcome Supervisor](Assets/Images/sup_welc.jpg)
+- ![Verify](Assets/Images/verify.jpg)
+- ![Verify](Assets/Images/verify_2.jpg)
+- ![Success](Assets/Images/success.jpg)
+
