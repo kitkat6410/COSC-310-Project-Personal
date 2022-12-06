@@ -62,7 +62,7 @@ To implement the NFCScanner, download the latest version of android studio, clon
 
 ## Feature 1: Geolocation
 
-The first feature was implemented using Abstract API Geolocation service. The service sends many parameters using JSON. I used city, region_geoname_id, and security > is_vpn. If the user is located within British Columbia and is not using a VPN (Note: The NordVPN service I used is more powrful than Abstract API VPN detection, but the code is there) a screen with the city name of the user will show:
+The first feature was implemented using Abstract API Geolocation service. The service sends many parameters using JSON. I used city, region_geoname_id, and security > is_vpn. If the user is located within British Columbia and is not using a VPN (Note: The NordVPN service I used is more powerful than Abstract API VPN detection, but the code is there) a screen with the city name of the user will show:
 - ![Checking Geolocation](/Assets/Images/check_loc.jpg)
 - ![Kelowna Geolocation](/Assets/Images/Kelowna_Geolocation.png)
 - ![Vancouver Geolocation](/Assets/Images/Vancouver_Geolocation.png)
