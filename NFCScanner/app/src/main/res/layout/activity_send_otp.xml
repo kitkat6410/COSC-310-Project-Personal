@@ -131,12 +131,13 @@
                 android:layout_margin="30dp"
                 android:text="GET OTP"
                 android:textSize="16sp" />
+
             <ProgressBar
-                android:id = "@+id/progressBar"
+                android:id="@+id/pb"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:visibility="gone"/>
+                android:visibility="invisible" />
         </FrameLayout>
     </LinearLayout>
 

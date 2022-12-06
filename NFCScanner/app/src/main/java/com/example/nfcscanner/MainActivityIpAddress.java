@@ -32,7 +32,7 @@ public class MainActivityIpAddress extends AppCompatActivity {
                 }
                 //else send ipv4 address to mainActivity and goto mainActivity
                 else {
-                    Intent myIntent = new Intent(MainActivityIpAddress.this, MainActivity.class);
+                    Intent myIntent = new Intent(MainActivityIpAddress.this, ValidateGeoActivity.class);
                     myIntent.putExtra("ip_address", ipAddress); //Optional parameters
                     MainActivityIpAddress.this.startActivity(myIntent);
                 }

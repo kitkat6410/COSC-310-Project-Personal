@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         //pull ip address variable value from MainActivityIpAddress
         Intent intent = getIntent();
-        ipAddress = intent.getStringExtra("ip_address");
+        ipAddress = intent.getStringExtra("ipAddress");
 
         //textview "textViewAccess"
         textViewAccess = findViewById(R.id.textViewAccess);
@@ -72,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected, filter2};
-      //  Intent intent2 = new Intent(this, ValidateGeoActivity.class);
-       // startActivity(intent2);
+
     }
 
     //from AndroidManifest.xml, when NDEF tag discovered in intent filter
@@ -194,12 +193,17 @@ public class MainActivity extends AppCompatActivity {
 
         //if NFC card company role is allowed into selected room, goto accessGranted() and pas data to collectData()
         //otherwise if role is not allowed, goto accessDenied() and pass data to collectData()
-          if(counter >= 4){
-              supervisorAlert(textViewAccess);
-              collectData(stringNFCContent, intRoom, false);
+          if(counter >= 4 && intNFCContent == 6){
               Intent intent = new Intent(this, SendOtpActivity.class);
               startActivity(intent);
 
+
+
+
+          }
+          else if(counter >=4){
+              supervisorAlert(textViewAccess);
+              collectData(stringNFCContent, intRoom, false);
 
           }
           else {

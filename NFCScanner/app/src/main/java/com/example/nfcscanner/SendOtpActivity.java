@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
@@ -25,14 +25,14 @@ public class SendOtpActivity extends AppCompatActivity {
     EditText editEmail;
     Button buttonGetOTP;
     EditText PASS;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_otp);
         EditText inputMobile = findViewById(R.id.inputMobile);
         Button buttonGetOTP = findViewById(R.id.buttonGetOTP);
-        ProgressBar pb = findViewById(R.id.progressBar);
+         ProgressBar pb = findViewById(R.id.pb);
+
         String password = "SecuritySystem123";
          PASS = findViewById(R.id.inputPassword);
 
@@ -46,7 +46,7 @@ public class SendOtpActivity extends AppCompatActivity {
                 if (tmp.equals(password)) {
                     PhoneAuthProvider.getInstance().verifyPhoneNumber(
                             "+1" + inputMobile.getText().toString(),
-                            60, //TODO: change length of time
+                            80, //TODO: change length of time
                             TimeUnit.SECONDS,
                             SendOtpActivity.this,
                             new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -58,6 +58,7 @@ public class SendOtpActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onVerificationFailed(@NonNull FirebaseException e) {
+                                    Log.d("FFS", String.valueOf(e));
                                     pb.setVisibility(View.GONE);
                                     buttonGetOTP.setVisibility(View.VISIBLE);
                                     Toast.makeText(SendOtpActivity.this, "Phone number is invalid. Please try again", Toast.LENGTH_SHORT).show();
